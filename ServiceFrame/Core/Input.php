@@ -9,7 +9,7 @@ $frame = Frame_Controller::get_instance();
 $frame->input = $_REQUEST;
 
 if(!empty($frame->input['_DATA'])){
-    $frame->input['_DATA'] = json_decode($frame->input['_DATA']);
+    $frame->input['_DATA'] = json_decode($frame->input['_DATA'], true);
 }
 
 if(!empty($frame->input['_FILTER'])){

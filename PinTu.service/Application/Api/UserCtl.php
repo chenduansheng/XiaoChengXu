@@ -51,10 +51,64 @@ class User extends Ctl{
         );
 
         ajaxJson($out);
-  }
+    }
+    
+    //插入或改变用户信息
+    public function updateUser(){
+        
+        $this->load->MysqlDB('mysql0');
+        
+        if(empty($this->input['_DATA'])){
+            die('_DATA必须传过来，_DATA是json数据');
+        }
+        $data = $this->input['_DATA'];
+        $data['openid'] = $this->input['openid'];
+        $msg = '';
+        
+        if(!is_array($data)){
+            $msg = '_DATA必须是json数组';
+        }
+        
+        $is_has = $this->mysql0-> getOne([
+            'table'=>'t_user',
+            'field'=>'id',
+            'where'=>"AND openid = '".$this->input['openid']."'",
+        ]);
+        
+        if(!$is_has){
+            
+            $return = $this->mysql0->insert([
+                'table'=>'t_user',
+                'data'=>$data,
+                'is_return_id'=>true,
+            ]);
+            
+        } else{
+            
+            $return = $this->mysql0->update([
+                'table'=>'t_user',
+                'data'=>$data,
+                'where'=>'AND openid = '.$this->input['openid'],
+            ]);
+        }
+        
+        if($return){
+            $msg .= '成功';
+        }else{
+            $msg .= '失败';
+        }
+        
+        $out = [
+            'code'=>'200',
+            'msg'=>$msg,
+            'data'=>$return,
+        ];
+        
+        ajaxJson($out);
+    }
     
     
-    //插入用户联系信息
+    //插入用户联系信息【废弃】
     public function insertContact(){
         
         $this->load->MysqlDB('mysql0');
@@ -65,7 +119,7 @@ class User extends Ctl{
     		$msg = '_DATA必须是json数组';	
     	}
     	
-        /*测试数据
+        /*测试数据 
         $data =  [
             'user_id'=>'2',//用户id
             'wx_id' =>'dfd44',// 微信id,

@@ -1,5 +1,9 @@
 <?php
 
+if(empty($_REQUEST['openid']) && $_REQUEST['_A']!='getWxId'){
+    die('we need openid');
+}
+
 /***************
  * 定义应用路径
  ***************/

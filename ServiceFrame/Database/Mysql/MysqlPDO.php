@@ -328,6 +328,7 @@ class MysqlPDO {
 		$array = array_merge(array('table'=>''),$array);
 		
 		if(!is_array($array['data'])){
+		    print_r($array);;exit;
 			die('data必须是数组！');
 		}
 		if(!$array['table']){
@@ -388,6 +389,7 @@ class MysqlPDO {
 		
 		return $r ? $r : 'no_change';
 	}
+	
 	public function delete($array){
 		$sql = "DELETE FROM {$array['table']} WHERE 1 ".$array['where'];
 		
