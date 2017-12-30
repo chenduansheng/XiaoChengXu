@@ -241,21 +241,23 @@ Page({
       let params = {
         _C:"User",
         _A:"updateUser",
-        lat: that.data.mapInfo ? that.data.mapInfo.latitude : '',
-        lng: that.data.mapInfo ? that.data.mapInfo.longitude : '',
-        mobile: inputTel,
-        avatarUrl: that.data.userInfo.avatarUrl,
-        is_show_info: radioInfo,
-        name: inputName,
-        nick_name: that.data.userInfo.nickName,
-        wx: inputWx,        
-        address: inputAddress,
-        //distance: inputDiffDistance,
-        gender: that.data.userInfo.gender,
-        city: that.data.userInfo.city
+        _DATA: JSON.stringify({
+          lat: that.data.mapInfo ? that.data.mapInfo.latitude : '',
+          lng: that.data.mapInfo ? that.data.mapInfo.longitude : '',
+          mobile: inputTel,
+          avatarUrl: that.data.userInfo.avatarUrl,
+          is_show_info: radioInfo,
+          name: inputName,
+          nick_name: that.data.userInfo.nickName,
+          wx: inputWx,
+          address: inputAddress,
+          //distance: inputDiffDistance,
+          gender: that.data.userInfo.gender,
+          city: that.data.userInfo.city
+        })        
       }
       //common.showErrorTip("提交会员信息");
-      common.request("submitMemberInfo",that,"json",params);
+      common.request("submitMemberInfo",that,"form",params);
     }    
   },
   getWx:function(e){
