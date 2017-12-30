@@ -1,0 +1,49 @@
+<!--pages/generatePuzzles/generatePuzzles.wxml-->
+<view class='container oh bgmain cyellow f14'>
+  <scroll-view class="scroll bbox" scroll-y="true">
+    <view class='h10'></view>
+    <view class="bgpink cr r2 m0-20 p0-10 bbox f12">
+      <view class="F_ bby h35 lh35 dn">
+        <label class="tr w60">玩法：</label>
+        <view class='f pl5'>海报拼图</view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">拼图组数：</label>
+        <view class='f pl5'><input class="dib mr15" type='number' value="{{group}}" bindblur="getGroup" bindconfirm="getGroup" placeholder='比赛组数' placeholder-style='color:#e2bc83'></input>组</view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">冠军赏金：</label>
+        <view class='f pl5'>
+          <input class='dib mr10' type="digit" bindblur="getNo1" bindconfirm="getNo1" placeholder='拼图速度最快的打赏金额' placeholder-style='color:#e2bc83' value="{{moneyNo1}}"></input>
+          元×1人
+        </view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">亚军赏金：</label>
+        <view class='f pl5'>
+          <text class="dib w40">{{moneyNo2}}</text>元×1人，冠军赏金的20%
+        </view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">季军赏金：</label>
+        <view class='f pl5'>
+          <text class="dib w40">{{moneyNo3}}</text>元×1人，冠军赏金的20%
+        </view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">参与赏金：</label>
+        <view class='f pl5'>
+          <text class="dib w40">{{moneyNo4}}</text>元×1人，冠军赏金的20%
+        </view>
+      </view>
+    </view>
+    <view class="W h30 tc mt30 db">每组拼图比赛需由10人参与，若不足则游戏无效</view>
+    <view class="h30 tc">需支付￥8.00手续费，优先使用余额￥0.00</view>
+    <button class='cred bgyellow tc W8 ml010 h40 lh40 r5 f14' bindtap="generatePics">{{moneyTotal? "还需要支付"+moneyTotal+"元":"生成拼图"}}</button>
+    <view class="F_ pt20 pb10 jcc">
+      <view class="bf h102 r2" style="border-width:5px"><image class="w240 h102 m0" src="../../image/poster001.png" mode="aspectFill"></image></view>
+    </view>
+    <view class="tc">请勿上传色情以及其他违禁图片，本小程序</view>
+    <view class="h20 tc">有权在收到投诉后删除相应内容</view>
+  </scroll-view>
+</view>

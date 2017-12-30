@@ -1,0 +1,11 @@
+<!--pages/postersList/postersList.wxml-->
+<view class="container f14 oh">
+  <view class="tc p15-0 b f16 ls2">拼海报赢赏金</view>
+  <scroll-view class="f scroll" scroll-y="true">
+    <block wx:for="00000000000">
+      <view class="W5 bbox p10 {{index>1?'mt15':''}}">
+        <image class="W" mode="widthFix" src="../../image/poster001.png"></image>
+      </view>
+    </block>
+  </scroll-view>
+</view>

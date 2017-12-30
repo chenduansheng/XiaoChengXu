@@ -1,0 +1,127 @@
+<!--index.wxml-->
+<block wx:if="{{showHome}}">
+<view class="container H bgmain oh">
+  <view class="F_ jcc">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image class="r w64 h64 m30" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+    </block>
+  </view>
+  <view class="tc cyellow f16 b ls2">
+    <view>选一张图或海报上传</view>
+    <view>让你的朋友来拼图赢红包</view>
+  </view>
+  <view class="f">
+    <image class="w180 mt50" bindtap="addImg" src="../../image/camera_big.png" mode="widthFix"></image>
+  </view>
+  <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="share">
+    <icon class='iconfont icon-eit f16'></icon> 联系客服
+  </view>
+  <view class="cyellow f14 pb100 dn">
+    <contact-button type="default-light" size="20" session-from="weapp">联系客服</contact-button>
+  </view>
+  
+</view>
+</block>
+
+<block wx:if="{{showCanvas}}">
+<view class="container H bg3 oh">
+  <view class="f F W bbox">
+     <!-- <view class='F jcc pt20 pl20'>
+      <image class="" src="{{imgSrc}}" mode='widthFix'></image>
+     </view> -->
+     <canvas class="W bbox" canvas-id="mycanvas"  bindtouchmove="touchMove"  style="height:{{canvasHeight}}px">
+     <!--bindtouchstart="touchStart" bindtouchend="touchEnd" <canvas class='w270 h270 bf bbox' canvas-id='childCanvas' wx:if="{{imgSrc}}" style="margin-left:52.50px;margin-top:142.5px"></canvas> -->
+       <canvas class='w270 h270 bf bbox' canvas-id='childCanvas' wx:if="{{imgSrc}}" style="margin-left:{{canvasMarginL}}px;margin-top:{{canvasMarginT}}px"></canvas> 
+     </canvas> 
+  </view>
+  <view class="F_ cf f16 bbox h50 lh50">
+    <view class="f pl20" bindtap="cancel">取消</view>
+    <view class="f tr pr20 cyellow bt3" bindtap="next">下一步</view>
+  </view>
+</view>
+</block>
+
+<block wx:if="{{showMemberInfo}}">
+  <view class='container oh bgmain f14'>
+    <view class="bgpink c3 r5 bbox f12 W9 mt05 p10">
+        <view class='tc h50 lh50 f16'>发布海报拼图需完善您的信息</view>
+        <view class="F_ bbc btc h40 lh40">
+          <label class="tr w60">公开信息：</label>
+          <view class='f pl5'>
+            <radio-group bindchange="changeRadioInfo">
+              <label class="radio">
+                <radio value="open" checked="checked"/>公开
+              </label>
+              <label class="radio ml15">
+                <radio value="delayOpen"/>完成拼图才公开
+              </label>
+            </radio-group>
+          </view>
+        </view>
+        <view class="F_ bbc btc h40 lh40">
+          <label class="tr w60">性别限制：</label>
+          <view class='f pl5'>
+            <radio-group bindchange="changeRadioSex">
+              <label class="radio">
+                <radio value="all" checked="checked"/>不限
+              </label>
+              <label class="radio ml15">
+                <radio value="girl"/>女
+              </label>
+              <label class="radio ml15">
+                <radio value="boy"/>男
+              </label>          
+            </radio-group>
+          </view>
+        </view>
+        <view class="F_ bbc h40 lh40">
+          <label class="tr w60">微信号：</label>
+          <view class='f pl5 ell'>
+            <input class='ell' type='text' bindinput="getWx"></input>
+          </view>
+        </view>
+        <view class="F_ bbc h40 lh40">
+          <label class="tr w60">联系人：</label>
+          <view class='f pl5'>
+            <input class='ell' type='text' bindinput="getName"></input>
+          </view>
+        </view>
+        <view class="F_ bbc h40 lh40">
+          <label class="tr w60">联系电话：</label>
+          <view class='f pl5'>
+            <input class='ell' type='tel' bindinput="getTel"></input>
+          </view>
+        </view>      
+        <view class="F_ bbc h40 lh40 dn">
+          <label class="tr w60">详细地址：</label>
+          <view class='f pl5'>
+            <input class='ell' type='text' bindinput="getAddress"></input>
+          </view>
+        </view>
+        <view class="F_ bbc h40 lh40">
+          <label class="tr w60">地图位置：</label>
+          <view class='f pl5'>
+             <input class='ell' type='button' bindtap="getMap" placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
+          </view>
+        </view>
+        <view class="F_ bbc h40 lh40">
+          <label class="tr w60">距离限制：</label>
+          <view class='f pl5'>
+            <input class='ell' type='digit' bindinput="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与'></input>
+          </view>
+        </view>
+        <view class="F_ h50 lh50 bbox">
+          <label class="tr w60">logo：</label>
+          <view class='f pl5 bbox h50' bindtap="uploadLogo">
+              <!-- <view class="dib w50 h50 pr bbox r bgopacity3">  -->
+                <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+              <!-- </view>  -->
+          </view>
+        </view>
+        <view class="F_">
+          <button class="bgmain mt20 r5 W7 cf f14" bindtap="submitInfo">确定</button>
+        </view>
+    </view>  
+  </view>
+</block>

@@ -1,0 +1,44 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/postersList/postersList",
+    "pages/my/my",
+    "pages/test/test",
+    "pages/test2/test2",
+    "pages/generatePuzzles/generatePuzzles",
+    "pages/share/share",
+    "pages/ranking/ranking"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#cb634a",
+    "navigationBarTitleText": "海报拼图",
+    "navigationBarTextStyle":"white"
+  },
+  "tabBar": {
+    "color": "#777",
+    "backgroundColor": "#ffe3c8",
+    "borderStyle": "black",
+    "selectedColor": "#cb634a",
+    "position": "bottom",
+    "list": [{
+      "pagePath": "pages/index/index",
+      "text": "发拼图",
+      "iconPath": "image/camera.png",
+      "selectedIconPath": "image/camera2.png"
+    },
+    {
+      "pagePath": "pages/postersList/postersList",
+      "text": "可拼海报",
+      "iconPath": "image/porsters.png",
+      "selectedIconPath": "image/porsters2.png"
+    },
+    {
+      "pagePath": "pages/my/my",
+      "text": "我的",
+      "iconPath": "image/my.png",
+      "selectedIconPath": "image/my2.png"
+    }]
+  }
+}
