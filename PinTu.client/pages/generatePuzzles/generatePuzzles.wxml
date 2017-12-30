@@ -42,20 +42,20 @@
         <view class='f pl5'>
           <radio-group bindchange="changeRadioSex">
             <label class="radio">
-              <radio value="all" checked="checked" />不限
+              <radio value="0" checked="checked" />不限
             </label>
             <label class="radio ml15">
-              <radio value="girl" />女
+              <radio value="2" />女
             </label>
             <label class="radio ml15">
-              <radio value="boy" />男
+              <radio value="1" />男
             </label>
           </radio-group>
         </view>
       </view>
       <view class="F_ bby h35 lh35">
         <label class="tr w60">距离限制：</label>
-        <view class='f pl5'>
+        <view class='f pl5 ell'>
           <input class="dib mr15" type='number' value="{{diffDistance}}" bindblur="getDiffDistance" bindconfirm="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与' placeholder-style='color:#e2bc83'></input>米</view>
       </view>
       <view class="F_ h50 lh50 bbox">
@@ -70,7 +70,7 @@
     </view>
     <view class="W h30 tc mt30 db">每组拼图比赛需由10人参与，若不足则游戏无效</view>
     <view class="h30 tc">需支付￥8.00手续费，优先使用余额￥0.00</view>
-    <button class='cred bgyellow tc W8 ml010 h40 lh40 r5 f14' bindtap="generatePics">{{moneyTotal? "还需要支付"+moneyTotal+"元":"生成拼图"}}</button>
+    <button class='cred bgyellow tc W8 ml010 h40 lh40 r5 f14' bindtap="clickGenerate">{{moneyTotal? "还需要支付"+moneyTotal+"元":"生成拼图"}}</button>
     <view class="F_ pt20 pb10 jcc">
       <view class="bf h150 r2" style="border-width:5px">
         <image class="w150 h150 m0" src="../../image/poster001.png" mode="aspectFill"></image>

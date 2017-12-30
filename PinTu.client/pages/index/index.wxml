@@ -111,7 +111,7 @@
             <input class='ell' type='digit' bindinput="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与'></input>
           </view>
         </view>
-        <view class="F_ h50 lh50 bbox dn">
+        <view class="F_ h50 lh50 bbox">
           <label class="tr w60">logo：</label>
           <view class='f pl5 bbox h50' bindtap="uploadLogo">
               <!-- <view class="dib w50 h50 pr bbox r bgopacity3">  -->

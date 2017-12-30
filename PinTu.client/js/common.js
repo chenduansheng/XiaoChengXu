@@ -14,11 +14,18 @@ function request(methodName, page, dataType, params) {
   let privateInfo = wx.getStorageSync("pivateInfo");
   //console.log("缓存privateInfo:");
   //console.log(privateInfo);
-  //console.log("code_local:" + wx.getStorageSync("code"))
-  params.openid = privateInfo.openId ? privateInfo.openId:'';
+  //console.log("code_local:" + wx.getStorageSync("code"))  
   if (!page){
     console.log("没传page！");
   }
+  let openId = privateInfo.openId ? privateInfo.openId : '';
+  params.openid = openId;
+  console.log(params);
+  if (params._DATA){
+    var _DATA = JSON.parse(params._DATA);
+    _DATA.openid = openId;
+    _DATA = JSON.stringify(_DATA)
+  }    
   return wx.request({
     url: getRequestUrl(methodName),
     method: 'POST',

@@ -253,7 +253,8 @@ Page({
           address: inputAddress,
           //distance: inputDiffDistance,
           gender: that.data.userInfo.gender,
-          city: that.data.userInfo.city
+          city: that.data.userInfo.city,
+          logo: that.data.logo
         })        
       }
       //common.showErrorTip("提交会员信息");

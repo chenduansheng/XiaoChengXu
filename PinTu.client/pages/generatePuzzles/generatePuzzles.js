@@ -61,7 +61,7 @@ Page({
   getGroup:function(e){
     let group = e.detail.value;
     that.setData({
-      group: group
+      group: parseInt(group)
     })
     that.computeMoney();
   },
@@ -73,7 +73,7 @@ Page({
     let no4 = no3 * 0.2;
     let group = that.data.group;
     let moneyService = that.data.moneyService;
-    let moneyTotal = moneyService + parseInt(group) * (no1 + no2 + no3 + no4 * 7);
+    let moneyTotal = moneyService + group * (no1 + no2 + no3 + no4 * 7);
     that.setData({
       moneyNo1: no1.toFixed(2),
       moneyNo2: no2.toFixed(2),
@@ -82,7 +82,7 @@ Page({
       moneyTotal: moneyTotal.toFixed(2)
     })
   },
-  generatePics:function(){
+  clickGenerate:function(){
     if (!that.data.moneyNo1){
       common.showErrorTip("请先完善信息");
       return false;
@@ -93,7 +93,31 @@ Page({
     let pkg = "0";
     let paySign = "0";
     let orderId = "0";
-    common.wxpay(timeStamp, nonceStr, pkg, paySign, orderId);
+    //common.wxpay(timeStamp, nonceStr, pkg, paySign, orderId);
+
+    that.submitActive();
+  },
+  submitActive:function(){
+    let params = {
+      _C: "Act",
+      _A: "insert",
+      _DATA: JSON.stringify({
+        'type':'poster', // '【common普通；poster海报】',
+        'degree_type' :'3*3',
+        'pay_total': that.data.moneyTotal,
+        'pay_fee': that.data.moneyService,//'发起人手续费',
+        'award_first': that.data.moneyNo1,// '冠军奖励',
+        'award_two': that.data.moneyNo2,//'亚军奖励',
+        'award_third': that.data.moneyNo3,//'季军奖励',
+        'award_all': that.data.moneyNo4,// '参与奖励',
+        'num_group': that.data.group,// '参与组数',
+        'num_person': that.data.group*10,// '参与人数',
+        'limit_sex': that.data.radioSex,// '【1男，2女】',
+        'limit_distance': that.data.inputDiffDistance,//'限制距离【单位米】',  
+        'pic': that.data.logo
+      })
+    }
+    common.request("submitActive", that, "form", params);
   },
   onSuccess: function (methodName, res) {
     console.log(methodName);
@@ -103,13 +127,13 @@ Page({
       if (ret.code == 200) {
         let data = ret.data;
         switch (methodName) {
-          case 'sendCode':
-            
+          case 'submitActive':
+            common.urlTarget("share");
             break;
         }
 
       } else {
-        common.showErrorTip(ret.msg);
+        common.showErrorTip(ret || ret.msg);
       }
     } else {
       console.log("接口有问题：" + methodName);
