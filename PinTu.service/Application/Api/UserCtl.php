@@ -88,7 +88,7 @@ class User extends Ctl{
             $return = $this->mysql0->update([
                 'table'=>'t_user',
                 'data'=>$data,
-                'where'=>'AND openid = '.$this->input['openid'],
+                'where'=>"AND openid = '".$this->input['openid']."'",
             ]);
         }
         
