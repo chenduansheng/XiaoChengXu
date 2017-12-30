@@ -114,9 +114,7 @@
         <view class="F_ h50 lh50 bbox">
           <label class="tr w60">logo：</label>
           <view class='f pl5 bbox h50' bindtap="uploadLogo">
-              <!-- <view class="dib w50 h50 pr bbox r bgopacity3">  -->
                 <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
-              <!-- </view>  -->
           </view>
         </view>
         <view class="F_">
