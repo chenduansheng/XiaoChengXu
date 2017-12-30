@@ -24,7 +24,8 @@ App({
     // 登录
     wx.login({
       success: res => {
-        that.globalData.code = res.code;        
+        that.globalData.code = res.code;    
+        wx.setStorageSync("code", res.code);
       }
     })
     // 获取用户信息

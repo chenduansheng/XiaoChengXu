@@ -38,6 +38,9 @@ Page({
   },
   onLoad: function () {
     that = this;
+    let code = wx.getStorageSync("code");
+    console.log("缓存code:"+code);
+    console.log(app.globalData);
     let canvasHeight = that.data.winHeight - 50;
     that.setData({
       showHome: true,
