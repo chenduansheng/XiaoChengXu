@@ -11,9 +11,11 @@ function getRequestUrl(methodName) {
 }
 
 function request(methodName, page, dataType, params) {
-  // if (app && app.globalData && app.globalData.token) {
-  //   params.token = token;
-  // }
+  let privateInfo = wx.getStorageSync("pivateInfo");
+  //console.log("缓存privateInfo:");
+  //console.log(privateInfo);
+  //console.log("code_local:" + wx.getStorageSync("code"))
+  params.openid = privateInfo.openId ? privateInfo.openId:'';
   if (!page){
     console.log("没传page！");
   }

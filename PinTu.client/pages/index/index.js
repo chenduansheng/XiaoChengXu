@@ -18,11 +18,12 @@ Page({
     canvasId:'mycanvas',
     radioInfo:'open',
     radioSex:'all',
-    inputNickName:'',
+    inputWx:'',
     inputName:'',
     inputTel:'',
     inputAddress:'',
     inputCoordinate:'',
+    inputDiffDistance:'',
     showMemberInfo: false,
     showCanvas:false,
     showHome:true,
@@ -39,7 +40,7 @@ Page({
   onLoad: function () {
     that = this;
     let code = wx.getStorageSync("code");
-    console.log("缓存code:"+code);
+    //console.log("缓存code:"+code);
     console.log(app.globalData);
     let canvasHeight = that.data.winHeight - 50;
     that.setData({
@@ -55,7 +56,7 @@ Page({
     let params = {
       _C:"Key",
       _A:"getWxId",
-      code:app.globalData.code
+      code: code
     }
     common.request("getSessionKey",that,"form",params);
     if (app.globalData.userInfo) {
@@ -102,8 +103,8 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
-    console.log("刷新项目");
-    wx.startPullDownRefresh({})
+    //console.log("刷新项目");
+    //wx.startPullDownRefresh({})
   },
   urlTarget:function(e){
     common.urlTarget(e.currentTarget.dataset.url);
@@ -225,12 +226,13 @@ Page({
   submitInfo: function () {
     var flag = false;
     let radioInfo = that.data.radioInfo;
-    let inputNickName = that.data.inputNickName;
+    let inputWx = that.data.inputWx;
     let inputName = that.data.inputName;
     let inputTel = that.data.inputTel;
     let inputAddress = that.data.mapInfo ? that.data.mapInfo.address : '';
     let inputCoordinate = that.data.inputCoordinate;
-    //flag = common.verifyNull(inputNickName, "微信号");
+    let inputDiffDistance = that.data.inputDiffDistance;
+    //flag = common.verifyNull(inputWx, "微信号");
     //flag = common.verifyNull(inputName,"联系人");
     // flag && (flag = common.verifyTel(inputTel));
     // flag && (flag = common.verifyNull(inputAddress,"地址"));
@@ -238,18 +240,19 @@ Page({
     if(flag){
       let params = {
         _C:"User",
-        _A:"insertContact",
-        user_id:3,
-        union_id: app.globalData.unionId ? app.globalData.unionId : "33",
-        is_show_info: radioInfo,
-        wx: inputNickName,
-        name: inputName,
+        _A:"updateUser",
+        lat: that.data.mapInfo ? that.data.mapInfo.latitude : '',
+        lng: that.data.mapInfo ? that.data.mapInfo.longitude : '',
         mobile: inputTel,
-        address: inputAddress,
         avatarUrl: that.data.userInfo.avatarUrl,
-        latitude: that.data.mapInfo?that.data.mapInfo.latitude:'',
-        longitude: that.data.mapInfo?that.data.mapInfo.longitude:'',
-        sex: that.data.radioSex
+        is_show_info: radioInfo,
+        name: inputName,
+        nick_name: that.data.userInfo.nickName,
+        wx: inputWx,        
+        address: inputAddress,
+        //distance: inputDiffDistance,
+        gender: that.data.userInfo.gender,
+        city: that.data.userInfo.city
       }
       //common.showErrorTip("提交会员信息");
       common.request("submitMemberInfo",that,"json",params);
@@ -257,7 +260,7 @@ Page({
   },
   getWx:function(e){
     let curVal = e.detail.value;
-    that.setData({ inputNickName: curVal })
+    that.setData({ inputWx: curVal })
   },
   getName:function(e){
     let curVal = e.detail.value;
@@ -271,6 +274,10 @@ Page({
     let curVal = e.detail.value;
     that.setData({ inputAddress: curVal })
   },
+  getDiffDistance: function (e) {
+    let curVal = e.detail.value;
+    that.setData({ inputDiffDistance: curVal })
+  },
   onSuccess: function (methodName, res) {
     if (res.statusCode == 200) {
       let ret = res.data;
@@ -279,12 +286,16 @@ Page({
         let info = res.data.data.info ? res.data.data.info : '';
         switch (methodName) {
           case 'getMemberInfo':  // 获取会员信息
-            if (info.union_id != "33"){
+            if(!info){
+              that.setData({
+                hasMember: false
+              })
+            }else{
               that.setData({
                 hasMember: true,
                 memberInfo: info
               })
-            }              
+            }             
             break;
           case 'submitMemberInfo':  // 提交会员信息
             that.setData({
@@ -295,19 +306,12 @@ Page({
             })
             break;
           case 'getSessionKey':
-              app.globalData.sessionKey = info.session_key;
-              app.globalData.openId = info.openid;
-              app.globalData.unionId = info.unionid ? info.unionid : '';
               let params = {
                 sessionKey : info.session_key,
                 openId : info.openid,
                 unionId : info.unionid ? info.unionid : ''
               }
-              that.setData({
-                privateInfo: params
-              })
-              //console.log(that.data.privateInfo);
-              //console.log(app.globalData);
+              wx.setStorageSync("pivateInfo", params);
               that.getMemberInfo(info.openid);    // 第一次通过openId获取会员信息
             break;
 
@@ -385,8 +389,7 @@ Page({
       success: function (res) {
         that.setData({ logo: res.tempFilePaths[0] });
       }
-    })
-    
+    })    
   },
   getMap: function () {
     wx.getSetting({

@@ -44,7 +44,7 @@
 
 <block wx:if="{{showMemberInfo}}">
   <view class='container oh bgmain f14'>
-    <view class="bgpink c3 r5 bbox f12 W9 mt05 p10">
+    <view class="bgpink c3 r5 bbox f12 W9 mt010 p10">
         <view class='tc h50 lh50 f16'>发布海报拼图需完善您的信息</view>
         <view class="F_ bbc btc h40 lh40">
           <label class="tr w60">公开信息：</label>
@@ -59,7 +59,7 @@
             </radio-group>
           </view>
         </view>
-        <view class="F_ bbc btc h40 lh40">
+        <view class="F_ bbc btc h40 lh40 dn">
           <label class="tr w60">性别限制：</label>
           <view class='f pl5'>
             <radio-group bindchange="changeRadioSex">
@@ -105,13 +105,13 @@
              <input class='ell' type='button' bindtap="getMap" placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
           </view>
         </view>
-        <view class="F_ bbc h40 lh40">
+        <view class="F_ bbc h40 lh40 dn">
           <label class="tr w60">距离限制：</label>
           <view class='f pl5'>
             <input class='ell' type='digit' bindinput="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与'></input>
           </view>
         </view>
-        <view class="F_ h50 lh50 bbox">
+        <view class="F_ h50 lh50 bbox dn">
           <label class="tr w60">logo：</label>
           <view class='f pl5 bbox h50' bindtap="uploadLogo">
               <!-- <view class="dib w50 h50 pr bbox r bgopacity3">  -->

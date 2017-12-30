@@ -12,11 +12,11 @@ App({
     wx.getShareInfo({
       shareTicket: 'shareTicket',
       success: function (res) {
-        console.log("获取shareInfo成功：");
+        console.log("获取分享info成功：");
         console.log(res);
       },
       fail: function (res) {
-        console.log("获取shareInfo成失败：");
+        console.log("获取分享info失败：");
         console.log(res);
       }
     })
@@ -41,7 +41,7 @@ App({
               if (this.userInfoReadyCallback) {
                 this.userInfoReadyCallback(res)
               }
-              console.log(res);
+              //console.log(res);
             }
           })
         }
