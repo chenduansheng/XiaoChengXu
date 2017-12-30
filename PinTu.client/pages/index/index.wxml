@@ -51,10 +51,10 @@
           <view class='f pl5'>
             <radio-group bindchange="changeRadioInfo">
               <label class="radio">
-                <radio value="open" checked="checked"/>公开
+                <radio value="SHOW" checked="checked"/>公开
               </label>
-              <label class="radio ml15">
-                <radio value="delayOpen"/>完成拼图才公开
+              <label class="radio ml15 dn">
+                <radio value="SHOW_AFTER_FINISH"/>完成拼图才公开
               </label>
             </radio-group>
           </view>
@@ -100,7 +100,7 @@
           </view>
         </view>
         <view class="F_ bbc h40 lh40">
-          <label class="tr w60">地图位置：</label>
+          <label class="tr w60">我的位置：</label>
           <view class='f pl5'>
              <input class='ell' type='button' bindtap="getMap" placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
           </view>

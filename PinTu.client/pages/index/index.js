@@ -16,7 +16,7 @@ Page({
     winHeight: app.globalData.phoneInfo.windowHeight,
     canvasHeight:0,
     canvasId:'mycanvas',
-    radioInfo:'open',
+    radioInfo:'SHOW',
     radioSex:'all',
     inputWx:'',
     inputName:'',
@@ -232,9 +232,9 @@ Page({
     let inputAddress = that.data.mapInfo ? that.data.mapInfo.address : '';
     let inputCoordinate = that.data.inputCoordinate;
     let inputDiffDistance = that.data.inputDiffDistance;
-    //flag = common.verifyNull(inputWx, "微信号");
-    //flag = common.verifyNull(inputName,"联系人");
-    // flag && (flag = common.verifyTel(inputTel));
+    flag = common.verifyNull(inputWx, "微信号");
+    flag = common.verifyNull(inputName,"联系人");
+    flag && (flag = common.verifyTel(inputTel));
     // flag && (flag = common.verifyNull(inputAddress,"地址"));
     flag = true;
     if(flag){
@@ -306,6 +306,7 @@ Page({
               showCanvas: false,
               showMemberInfo: false
             })
+            common.showSuccessTip("提交成功");
             break;
           case 'getSessionKey':
               let params = {

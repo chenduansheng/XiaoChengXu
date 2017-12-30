@@ -15,7 +15,11 @@ Page({
     moneyNo4: '',
     moneyTotal: '',
     group:1,
-    moneyService:8
+    moneyService:8,
+    diffDistance:'',
+    radioSex:'',
+    inputDiffDistance:'',
+    logo: '../../image/camera.png'
   },
   onLoad: function (options) {
     that = this;
@@ -28,6 +32,23 @@ Page({
   },
   onShareAppMessage: function () {
   
+  },
+  changeRadioSex: function (e) {
+    that.setData({ radioSex: e.detail.value });
+  },
+  getDiffDistance: function (e) {
+    let curVal = e.detail.value;
+    that.setData({ inputDiffDistance: curVal })
+  },
+  uploadLogo: function () {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album'],
+      success: function (res) {
+        that.setData({ logo: res.tempFilePaths[0] });
+      }
+    })
   },
   getNo1:function(e){
     var no1 = parseFloat(e.detail.value);

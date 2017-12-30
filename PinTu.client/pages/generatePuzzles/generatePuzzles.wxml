@@ -9,7 +9,8 @@
       </view>
       <view class="F_ bby h35 lh35">
         <label class="tr w60">拼图组数：</label>
-        <view class='f pl5'><input class="dib mr15" type='number' value="{{group}}" bindblur="getGroup" bindconfirm="getGroup" placeholder='比赛组数' placeholder-style='color:#e2bc83'></input>组</view>
+        <view class='f pl5'>
+          <input class="dib mr15" type='number' value="{{group}}" bindblur="getGroup" bindconfirm="getGroup" placeholder='比赛组数' placeholder-style='color:#e2bc83'></input>组</view>
       </view>
       <view class="F_ bby h35 lh35">
         <label class="tr w60">冠军赏金：</label>
@@ -36,12 +37,44 @@
           <text class="dib w40">{{moneyNo4}}</text>元×1人，冠军赏金的20%
         </view>
       </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">性别限制：</label>
+        <view class='f pl5'>
+          <radio-group bindchange="changeRadioSex">
+            <label class="radio">
+              <radio value="all" checked="checked" />不限
+            </label>
+            <label class="radio ml15">
+              <radio value="girl" />女
+            </label>
+            <label class="radio ml15">
+              <radio value="boy" />男
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="F_ bby h35 lh35">
+        <label class="tr w60">距离限制：</label>
+        <view class='f pl5'>
+          <input class="dib mr15" type='number' value="{{diffDistance}}" bindblur="getDiffDistance" bindconfirm="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与' placeholder-style='color:#e2bc83'></input>米</view>
+      </view>
+      <view class="F_ h50 lh50 bbox">
+        <label class="tr w60">logo：</label>
+        <view class='f pl5 bbox h50' bindtap="uploadLogo">
+        <!-- <view class="dib w50 h50 pr bbox r bgopacity3"> -->
+          <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+        <!-- </view> -->
+        </view>
+      </view>
+
     </view>
     <view class="W h30 tc mt30 db">每组拼图比赛需由10人参与，若不足则游戏无效</view>
     <view class="h30 tc">需支付￥8.00手续费，优先使用余额￥0.00</view>
     <button class='cred bgyellow tc W8 ml010 h40 lh40 r5 f14' bindtap="generatePics">{{moneyTotal? "还需要支付"+moneyTotal+"元":"生成拼图"}}</button>
     <view class="F_ pt20 pb10 jcc">
-      <view class="bf h102 r2" style="border-width:5px"><image class="w240 h102 m0" src="../../image/poster001.png" mode="aspectFill"></image></view>
+      <view class="bf h150 r2" style="border-width:5px">
+        <image class="w150 h150 m0" src="../../image/poster001.png" mode="aspectFill"></image>
+      </view>
     </view>
     <view class="tc">请勿上传色情以及其他违禁图片，本小程序</view>
     <view class="h20 tc">有权在收到投诉后删除相应内容</view>
