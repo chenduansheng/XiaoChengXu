@@ -9,7 +9,7 @@ class Pic extends Ctl{
         }
         
         $file = $_FILES['file'];//得到传输的数据
-        //得到文件名称
+        //得到文件名称 
         $name = $file['name'];
         $type = strtolower(substr($name,strrpos($name,'.')+1)); //得到文件类型，并且都转化成小写
         $allow_type = array('jpg','jpeg','gif','png'); //定义允许上传的类型
@@ -53,5 +53,6 @@ class Pic extends Ctl{
             echo "Failed!";
         }
     }
+    
     
 }
