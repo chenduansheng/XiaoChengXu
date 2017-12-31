@@ -139,18 +139,6 @@ Page({
       }
     })
   },
-  onUpload:function(result,res,submitName){
-    if (result == "fail") {
-      common.showErrorTip("图片上传失败");
-      return false;
-    }
-    switch (submitName){
-      case 'submitLogo':
-        console.log(submitName+"图片上传成功:");
-        console.log(res);
-        break;
-    }
-  },
   delImg:function(){
     that.setData({
       hasImg: false,
@@ -197,7 +185,7 @@ Page({
             showMemberInfo: false,
             showCanvas: true
           })          
-          //that.drawImg(that.data.canvasMarginL, that.data.canvasMarginT, res.width, res.height);
+          that.drawImg(that.data.canvasMarginL-20, that.data.canvasMarginT-20, res.width, res.height);
         }
       }
     })
@@ -208,13 +196,16 @@ Page({
       x:35,
       y:100,
       width:270,
-      height:167,
+      height:270,
       destWidth: 270,
-      destHeight: 117,
+      destHeight: 270,
       success:function(res){
         console.log(res);
         that.setData({ imgSrc: res.tempFilePath});
         common.showSuccessTip("图片裁剪成功");
+        setTimeout(function(){
+          common.urlTarget("generatePuzzles", "", "?poster=" + res.tempFilePath);
+        },1500)
       },
       fail:function(err){
         console.log(err);
@@ -230,8 +221,7 @@ Page({
   getMemberInfo:function(openId){
     let params = {
       _C: 'User',
-      _A: 'selectContact',
-      openid: openId ? openId : that.data.privateInfo.openId
+      _A: 'selectOne'
     }
     common.request("getMemberInfo", that, "form", params);
   },
@@ -253,7 +243,7 @@ Page({
     if(flag){
       let params = {
         _C:"User",
-        _A:"updateUser",
+        _A:"updateOne",
         _DATA: JSON.stringify({
           lat: that.data.mapInfo ? that.data.mapInfo.latitude : '',
           lng: that.data.mapInfo ? that.data.mapInfo.longitude : '',
@@ -264,7 +254,7 @@ Page({
           nick_name: that.data.userInfo.nickName,
           wx: inputWx,
           address: inputAddress,
-          declaration: inputDiffDistance,
+          //declaration: inputDiffDistance,
           //distance: inputDiffDistance,
           gender: that.data.userInfo.gender,
           city: that.data.userInfo.city,
@@ -333,7 +323,9 @@ Page({
                 openId : info.openid,
                 unionId : info.unionid ? info.unionid : ''
               }
-              wx.setStorageSync("pivateInfo", params);
+              if (!info.errcode){
+                wx.setStorageSync("pivateInfo", params);            
+              }              
               that.getMemberInfo(info.openid);    // 第一次通过openId获取会员信息
             break;
 
@@ -365,11 +357,11 @@ Page({
     console.log(e);
   },
   touchMove:function(e){
-    console.log("触摸move：");
-    console.log(e);
-    setTimeout(function(){
-      //that.move(e);
-    },500)
+    // console.log("触摸move：");
+    // console.log(e);
+    // setTimeout(function(){
+    //   that.move(e);
+    // },500)
   },
   touchEnd:function(e){
     console.log("触摸end：");
@@ -411,9 +403,7 @@ Page({
       success: function (res) {
         let tempFilePaths = res.tempFilePaths;
         that.setData({ logo: tempFilePaths[0] });
-        let params = {
-          _C: "pic",
-          _A: "upload",
+        let params = {          
           path: "logo"
         }
         common.uploadFile(that, "submitLogo", tempFilePaths[0], params);
@@ -441,6 +431,22 @@ Page({
         });
       }
     })
+  },
+  onUpload: function (result, res, submitName) {
+    let data = JSON.parse(res.data); 
+    if (result == "fail" || res.statusCode!=200 || data.code!=200) {
+      common.showErrorTip(submitName + "上传失败");
+      return false;
+    }
+    // 上传成功
+    let info = data.data.info;
+    let pic = app.globalData.imgDir + info.pic;
+    console.log(submitName+"服务器图片地址："+pic);
+    switch (submitName) {
+      case 'submitLogo':
+        
+        break;
+    }
   }
   
 })

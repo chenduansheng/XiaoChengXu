@@ -74,7 +74,7 @@
       <view class="F_ bby lh20">
         <label class="tr w60 h35 lh35">活动声明：</label>
         <view class='f pl5'>
-          <textarea class="W" maxlength="200" auto-height='true' show-confirm-bar='true'  bindblur="getDeclaration" bindconfirm="getDeclaration" placeholder-style='color:#e2bc83' placeholder='活动说明不能多于200字' value="{{inputDeclaration}}"></textarea>
+          <textarea class="W" maxlength="200" auto-height='true' show-confirm-bar='true'  bindblur="getDescription" bindconfirm="getDescription" placeholder-style='color:#e2bc83' placeholder='活动说明不能多于200字' value="{{inputDescription}}"></textarea>
         </view>
       </view>
 
@@ -84,7 +84,7 @@
     <button class='cred bgyellow tc W8 ml010 h40 lh40 r5 f14' bindtap="clickGenerate">{{moneyTotal? "还需要支付"+moneyTotal+"元":"生成拼图"}}</button>
     <view class="F_ pt20 pb10 jcc">
       <view class="bf h150 r2" style="border-width:5px">
-        <image class="w150 h150 m0" src="../../image/poster001.png" mode="aspectFill"></image>
+        <image class="w150 h150 m0" src="{{poster}}" mode="aspectFit"></image>
       </view>
     </view>
     <view class="tc">请勿上传色情以及其他违禁图片，本小程序</view>

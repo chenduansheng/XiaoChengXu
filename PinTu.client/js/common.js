@@ -13,6 +13,7 @@ function getRequestUrl(methodName) {
 function request(methodName, page, dataType, params) {
   let privateInfo = wx.getStorageSync("pivateInfo");
   //console.log("缓存privateInfo:");
+  //console.log(privateInfo);
   if (!page){
     console.log("没传page！");
   }
@@ -62,24 +63,23 @@ function getRequestData(dataType, params) {
   }
 }
 
+// 上传图片
 function uploadFile(page,submitName,imgSrc,params){
   if (!page){showErrorTip("未指定上传页面")};
   let src = imgSrc ? imgSrc : '';
   let privateInfo = wx.getStorageSync("pivateInfo");
   params.openid = privateInfo.openId;  
+  params._C = "Pic",
+  params._A = "upload",
   wx.uploadFile({
     url: baseUrl + "/index.php",
     filePath: imgSrc,
     name: 'file',
     formData: params,
     success: function (res) {
-      //console.log("图片上传成功：");
-      //console.log(res);
       page.onUpload("success", res, submitName);
     },
     fail: function (res) {
-      //console.log("图片上传失败：");
-      //console.log(res);
       page.onUpload("fail", res, submitName);
     }
   })
@@ -89,16 +89,6 @@ function uploadFile(page,submitName,imgSrc,params){
 function urlTarget(name,urltype,params){
   if (!params) params='';
   switch (urltype){
-    case undefined:
-      wx.navigateTo({
-        url: '../' + name + '/' + name + params
-      })
-      break;
-    case '':
-      wx.navigateTo({
-        url: '../' + name + '/' + name + params
-      })
-      break;
     case 'navigate':        // 保留当前页面，跳转到应用内的某个页面
       wx.navigateTo({
         url: '../' + name + '/' + name + params
@@ -118,6 +108,12 @@ function urlTarget(name,urltype,params){
       wx.reLaunch({
         url: '../' + name + '/' + name + params
       })
+      break;
+    default:
+      wx.navigateTo({
+        url: '../' + name + '/' + name + params
+      })
+      break;
   }
 }
 

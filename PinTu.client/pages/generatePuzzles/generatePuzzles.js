@@ -19,10 +19,13 @@ Page({
     diffDistance:'',
     radioSex:'',
     inputDiffDistance:'',
-    logo: '../../image/camera.png'
+    inputDescription:'',
+    logo: '../../image/camera.png',
+    poster:'../../image/poster001.png'
   },
   onLoad: function (options) {
     that = this;
+    that.setData({ poster: options.poster})
   },
   onReady: function () {
   
@@ -40,40 +43,24 @@ Page({
     let curVal = e.detail.value;
     that.setData({ inputDiffDistance: curVal })
   },
+  getDescription: function (e) {
+    let curVal = e.detail.value;
+    that.setData({ inputDescription: curVal })
+  },
   chooseImg: function () {
     wx.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
       success: function (res) {
-        that.setData({ logo: res.tempFilePaths[0] });
-        that.uploadFile(res.tempFilePaths[0]);        
+        let tempFilePaths = res.tempFilePaths;
+        that.setData({ logo: tempFilePaths[0] });
+        let params = {
+          path: "active"
+        }
+        common.uploadFile(that, "submitActiveImg", tempFilePaths[0], params);    
       }
     })
-  },
-  uploadFile: function (imgSrc){
-    let src = imgSrc ? imgSrc : '';
-    let privateInfo = wx.getStorageSync("pivateInfo");
-    let params = {
-      _C : "pic",
-      _A : "upload",
-      openid: privateInfo.openId
-    }
-    wx.uploadFile({
-      url: common.baseUrl+"/index.php",
-      filePath: imgSrc,
-      name: 'file',
-      formData: params,
-      success:function(res){
-        console.log("图片上传成功：");
-        console.log(res);
-      },
-      fail:function(res){
-        console.log("图片上传失败：");
-        console.log(res);
-      }
-    })
-
   },
   getNo1:function(e){
     var no1 = parseFloat(e.detail.value);
@@ -112,20 +99,15 @@ Page({
       common.showErrorTip("请先完善信息");
       return false;
     }
-    //common.showErrorTip("切图3*4");
-    let timeStamp = "0";
-    let nonceStr = "0";
-    let pkg = "0";
-    let paySign = "0";
-    let orderId = "0";
-    //common.wxpay(timeStamp, nonceStr, pkg, paySign, orderId);
-
-    that.submitActive();
+    let params = {
+      path: "act/poster"
+    }
+    common.uploadFile(that, "submitPost", that.data.poster, params);
   },
   submitActive:function(){
     let params = {
       _C: "Act",
-      _A: "insert",
+      _A: "insertOne",
       _DATA: JSON.stringify({
         'type':'poster', // '【common普通；poster海报】',
         'degree_type' :'3*3',
@@ -138,8 +120,9 @@ Page({
         'num_group': that.data.group,// '参与组数',
         'num_person': that.data.group*10,// '参与人数',
         'limit_sex': that.data.radioSex,// '【1男，2女】',
-        'limit_distance': that.data.inputDiffDistance,//'限制距离【单位米】',  
-        'pic': that.data.logo
+        'limit_distance': that.data.inputDiffDistance,//'限制距离【单位米】',
+        "description": that.data.inputDescription,
+        'pic': that.data.poster
       })
     }
     common.request("submitActive", that, "form", params);
@@ -170,5 +153,33 @@ Page({
   onFail: function (methodName) {
     console.log("接口调用失败：" + methodName);
   },
-  onComplete: function (methodName) { }
+  onComplete: function (methodName) { 
+
+  },
+  onUpload: function (result, res, submitName) {  
+    let data = JSON.parse(res.data);  
+    if (result == "fail" || res.statusCode != 200 || data.code != 200) {
+      common.showErrorTip(submitName + "上传失败");
+      return false;
+    }
+    // 上传成功
+    let info = data.data.info;
+    let pic = app.globalData.imgDir + info.pic;
+    console.log(submitName + "服务器图片地址：" + pic);
+    switch (submitName) {
+      case 'submitPoster':
+        that.setData({ poster: pic})
+        // let timeStamp = "0";
+        // let nonceStr = "0";
+        // let pkg = "0";
+        // let paySign = "0";
+        // let orderId = "0";
+        //common.wxpay(timeStamp, nonceStr, pkg, paySign, orderId);
+        that.submitActive();
+        break;
+      case 'submitActiveImg':
+
+        break;
+    }
+  }
 })

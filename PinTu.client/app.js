@@ -54,10 +54,12 @@ App({
   globalData: {
     userInfo: null,
     phoneInfo:'',
-    code:'',
-    sessionKey:'',
-    openId:'',
-    unionId:''
+    //code:'',
+    //imgDir:"http://xcx.s1.welcomest.com/images/",
+    imgDir:"http://xcx.s1.welcomest.com/pintu/images/"
+    // sessionKey:'',
+    // openId:'',
+    // unionId:''
   },
   onSuccess: function (methodName,res){
     console.log(methodName);
@@ -67,8 +69,8 @@ App({
       if(ret.code == 200){
         let data = ret.data;
         switch (methodName){
-          case 'sendCode':
-            //decode.WXBizDataCrypt(appid,"123456");
+          case '':
+            
             break;
         }
 
