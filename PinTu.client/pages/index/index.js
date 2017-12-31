@@ -205,7 +205,7 @@ Page({
         common.showSuccessTip("图片裁剪成功");
         setTimeout(function(){
           common.urlTarget("generatePuzzles", "", "?poster=" + res.tempFilePath);
-        },1500)
+        },500)
       },
       fail:function(err){
         console.log(err);

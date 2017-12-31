@@ -33,7 +33,7 @@
   <view class="W">
     <view class="F_ f14 lh40 bbe">
       <view class="f pl10">目前排名</view>
-      <view class="pr10">还有机会赢得第一名X元赏金</view>
+      <view class="pr10">还有机会赢得第一名{{ainfo.award_first}}元赏金</view>
     </view>    
   </view>
   <view class='f H oh F W bbox'>
@@ -70,9 +70,52 @@
       </view>
     </view>
 
-    <view class="f F pt50">
-      <view class=""></view>
-      <view class='tc f12 cc mt20'>点击图块交换位置，拼图成功自动领取赏金</view>
+    <view class="f F_ jcc dn">
+      <view class="w270 h270 bbox pr">
+        <block wx:for="{{arrPic}}">
+          <image class='C4 h90 dib be m0 bbox' src="{{arrPic[index]}}" data-index="{{index}}" data-src="{{arrPic[index]}}" mode="scaleToFill" bindtap="exchangePic"></image>
+        </block>
+      </view>  
+    </view>
+
+    <view class="f F_ jcc">
+      <view class="w270 h270 bb bbox">
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+      </view>
     </view>
 
     <view class="F_ jcc f16 p20-0">
