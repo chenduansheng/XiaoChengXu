@@ -21,7 +21,8 @@ Page({
     inputDiffDistance:'',
     inputDescription:'',
     logo: '../../image/camera.png',
-    poster:'../../image/poster001.png'
+    poster:'../../image/poster001.png',
+    onlinePoster:''
   },
   onLoad: function (options) {
     that = this;
@@ -102,7 +103,7 @@ Page({
     let params = {
       path: "act/poster"
     }
-    common.uploadFile(that, "submitPost", that.data.poster, params);
+    common.uploadFile(that, "submitPoster", that.data.poster, params);
   },
   submitActive:function(){
     let params = {
@@ -122,24 +123,31 @@ Page({
         'limit_sex': that.data.radioSex,// '【1男，2女】',
         'limit_distance': that.data.inputDiffDistance,//'限制距离【单位米】',
         "description": that.data.inputDescription,
-        'pic': that.data.poster
+        'pic': that.data.onlinePoster
       })
     }
     common.request("submitActive", that, "form", params);
   },
   onSuccess: function (methodName, res) {
-    console.log(methodName);
-    console.log(res);
     if (res.statusCode == 200) {
       let ret = res.data;
       if (ret.code == 200) {
         let data = ret.data;
+        let info = data.info;
         switch (methodName) {
           case 'submitActive':
-            common.urlTarget("share");
+            common.urlTarget("share","","?aid="+data.id+"&poster="+that.data.poster);
             break;
           case 'submitImg':
             
+            break;
+          case 'getWxPayInfo':
+            let timeStamp = info.timeStamp;
+            let nonceStr = info.nonceStr;
+            let pkg = info.package;
+            let paySign = info.paySign;
+            let orderId = '';
+            common.wxpay(timeStamp, nonceStr, pkg, paySign,that);            
             break;
         }
 
@@ -168,18 +176,23 @@ Page({
     console.log(submitName + "服务器图片地址：" + pic);
     switch (submitName) {
       case 'submitPoster':
-        that.setData({ poster: pic})
-        // let timeStamp = "0";
-        // let nonceStr = "0";
-        // let pkg = "0";
-        // let paySign = "0";
-        // let orderId = "0";
-        //common.wxpay(timeStamp, nonceStr, pkg, paySign, orderId);
-        that.submitActive();
+        that.setData({ onlinePoster: info.pic})
+        let params = {
+          _C:'Pay',
+          _A:'get',
+          // money: that.data.moneyTotal
+          money: 0.01
+        }
+        common.request("getWxPayInfo", that, "form", params);        
         break;
       case 'submitActiveImg':
 
         break;
+    }
+  },
+  onWxPay: function (result,res){
+    if (result == "success"){
+      that.submitActive();
     }
   }
 })

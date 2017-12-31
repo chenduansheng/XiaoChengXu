@@ -22,7 +22,8 @@ function request(methodName, page, dataType, params) {
   if (params._DATA){
     var _DATA = JSON.parse(params._DATA);
     _DATA.openid = openId;
-    _DATA = JSON.stringify(_DATA)
+    _DATA = JSON.stringify(_DATA);
+    params._DATA = _DATA;
   }    
   return wx.request({
     url: getRequestUrl(methodName),
@@ -210,22 +211,23 @@ function deleteTeaMoneyCart(carts, token, tableId) {
   computeCarts(carts);
 }
 
-function wxpay(timeStamp, nonceStr, pkg, paySign, orderId) {
+function wxpay(timeStamp, nonceStr, pkg, paySign,page) {
   wx.requestPayment({
-    timeStamp: timeStamp,
+    timeStamp: timeStamp.toString(),
     nonceStr: nonceStr,
     "package": pkg,
     signType: 'MD5',
     paySign: paySign,
     success: function (res) {
-      showSuccessTip("微信支付成功：");
-      console.log(res);      
-      //common.urlTarget('paySuccess', 'redirect', "?paytype=wx&price=" + this.data.carts.totalPrice + "&orderId=" + orderId);
+      showSuccessTip("微信支付成功~");
+      page.onWxPay("success",res);      
+      //console.log(res);
     },
     fail: function (res) {
-      console.log("微信支付失败：");
-      console.log(res);
-      showErrorTip("支付失败!");
+      showErrorTip("微信支付失败");
+      console.log(res);  
+      //page.onWxPay("fail",res);
+      //console.log("微信支付失败：");          
     }
   })
 }

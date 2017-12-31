@@ -5,10 +5,16 @@ var that = '';
 Page({
   data: {
     avatar: '',
-    qrCode:'../../image/2018.jpg'
+    qrCode:'../../image/2018.jpg',    // 二维码
+    aid:''
   },
   onLoad: function (options) {
     that = this;
+    that.setData({ 
+      aid: options.aid,
+      qrCode: options.poster
+    })
+    console.log(options);
   },
   onReady: function () {
     
@@ -22,7 +28,7 @@ Page({
   onShareAppMessage: function (ret) {
     return{
       title:"share海报拼图",
-      path:"/pages/share?testId=5678",
+      path:"/pages/share?aid="+that.data.aid,
       success:function(res){              // 转发成功
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
@@ -44,7 +50,7 @@ Page({
   },
   urlTarget: function (e) {
     const name = e.currentTarget.dataset.url;
-    common.urlTarget(name);
+    common.urlTarget(name,"","?aid="+that.data.aid);
   },
   onSuccess: function (methodName, res) {
     console.log(methodName);
