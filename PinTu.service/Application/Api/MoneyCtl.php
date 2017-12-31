@@ -4,24 +4,12 @@ class Money extends Ctl{
 	
         
     /* 从mysql获得数据 */
-    public function select(){
+    public function selectOne(){
+        
+        $openid= $this->input['openid'];
         
         $this->load->mysqlDB('mysql0');
-	if(empty($this->input['openid'])){
-                ajaxJson(['code'=>444,'msg'=>'[openid is needed] union_id没传','data'=>'']);
-        }
-
-        $openid= $this->input['openid'];
-        if(!$openid){
-		ajaxJson(['code'=>4,'msg'=>'openid没传','data'=>'']);
-	}
-        /*测试数据*/
-        $data =  [
-            'wx_id' =>'dfd44',// 微信id,
-        ];
-        
         $data = $this->mysql0-> getOne(array(
-            
             'table'=>'t_user_money',
             'field'=>'*',
             'where'=>'AND openid="'.$openid.'"'
@@ -39,9 +27,12 @@ class Money extends Ctl{
         ajaxJson($out);
     }
     
+    public function test1(){
+        echo 44;exit;
+    }
     
     //插入用户资金记录 修改用户余额
-    public function insertUserMoney(){
+    public function insertOne(){
         
         try{
             $this->load->MysqlDB('mysql0');

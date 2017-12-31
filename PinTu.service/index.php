@@ -1,5 +1,5 @@
 <?php
-
+/* openid */
 if(empty($_REQUEST['openid']) && $_REQUEST['_A']!='getWxId'){
     die('we need openid');
 }
@@ -23,6 +23,7 @@ else
 define('APP_PATH', $appPath);
 define('API_PATH', APP_PATH.'Api/');
 define('LOG_PATH', APP_PATH.'Runtime/Logs/');
+define('LIB_PATH', APP_PATH.'Lib/');
 
 
 /***************
@@ -40,6 +41,22 @@ else
     die('noSysPath!');
 }
 define('BASE_PATH', $systemPath);
+
+/***************
+ * 定义图片等文件路径
+ ***************/
+
+$resource_path = '../../Resource';
+if (($_temp_resource = realpath($resource_path)))
+{
+    $resource_path= $_temp_resource.'/';
+    $resource_path= str_replace('\\', '/', $resource_path);
+}
+else
+{
+    die('noSysPath!');
+}
+define('PIC_PATH', $resource_path.'xcx/pintu/images/');
 
 
 /***************
