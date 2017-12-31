@@ -58,12 +58,23 @@
         <view class='f pl5 ell'>
           <input class="dib mr15" type='number' value="{{diffDistance}}" bindblur="getDiffDistance" bindconfirm="getDiffDistance" placeholder='只有距您这个范围内的人才可以参与' placeholder-style='color:#e2bc83'></input>米</view>
       </view>
-      <view class="F_ h50 lh50 bbox">
-        <label class="tr w60">logo：</label>
-        <view class='f pl5 bbox h50' bindtap="uploadLogo">
-        <!-- <view class="dib w50 h50 pr bbox r bgopacity3"> -->
+      <view class="F_ bby h50 lh50 bbox">
+        <label class="tr w60">活动图片：</label>
+        <view class='f pl5 bbox h50' bindtap="chooseImg">
+         <!-- <view class="dib w50 h50 pr bbox r bge">  -->
           <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
-        <!-- </view> -->
+          <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+          <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+          <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+          <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+         <!-- </view>  -->
+        </view>
+      </view>
+
+      <view class="F_ bby lh20">
+        <label class="tr w60 h35 lh35">活动声明：</label>
+        <view class='f pl5'>
+          <textarea class="W" maxlength="200" auto-height='true' show-confirm-bar='true'  bindblur="getDeclaration" bindconfirm="getDeclaration" placeholder-style='color:#e2bc83' placeholder='活动说明不能多于200字' value="{{inputDeclaration}}"></textarea>
         </view>
       </view>
 

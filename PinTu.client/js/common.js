@@ -13,14 +13,11 @@ function getRequestUrl(methodName) {
 function request(methodName, page, dataType, params) {
   let privateInfo = wx.getStorageSync("pivateInfo");
   //console.log("缓存privateInfo:");
-  //console.log(privateInfo);
-  //console.log("code_local:" + wx.getStorageSync("code"))  
   if (!page){
     console.log("没传page！");
   }
   let openId = privateInfo.openId ? privateInfo.openId : '';
   params.openid = openId;
-  console.log(params);
   if (params._DATA){
     var _DATA = JSON.parse(params._DATA);
     _DATA.openid = openId;
@@ -63,6 +60,29 @@ function getRequestData(dataType, params) {
   } else {
     return JSON.stringify(params);
   }
+}
+
+function uploadFile(page,submitName,imgSrc,params){
+  if (!page){showErrorTip("未指定上传页面")};
+  let src = imgSrc ? imgSrc : '';
+  let privateInfo = wx.getStorageSync("pivateInfo");
+  params.openid = privateInfo.openId;  
+  wx.uploadFile({
+    url: baseUrl + "/index.php",
+    filePath: imgSrc,
+    name: 'file',
+    formData: params,
+    success: function (res) {
+      //console.log("图片上传成功：");
+      //console.log(res);
+      page.onUpload("success", res, submitName);
+    },
+    fail: function (res) {
+      //console.log("图片上传失败：");
+      //console.log(res);
+      page.onUpload("fail", res, submitName);
+    }
+  })
 }
 
 // 多种跳转,name：目标文件名，urltype：跳转类型，params：?+参数集合
@@ -237,5 +257,6 @@ module.exports = {
   ok: ok,
   baseUrl: baseUrl,
   wxpay: wxpay,
-  phoneInfo: phoneInfo
+  phoneInfo: phoneInfo,
+  uploadFile: uploadFile
 }

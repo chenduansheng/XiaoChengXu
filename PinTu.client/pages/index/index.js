@@ -24,6 +24,7 @@ Page({
     inputAddress:'',
     inputCoordinate:'',
     inputDiffDistance:'',
+    inputDeclaration:'',
     showMemberInfo: false,
     showCanvas:false,
     showHome:true,
@@ -122,7 +123,7 @@ Page({
     }
     
   },
-  chooseImg:function(){
+  chooseImg:function(){   // 选择海报
     that.setData({ 
         showHome: false,
         showMemberInfo: false,
@@ -132,12 +133,23 @@ Page({
       count: 1, 
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
-      success: function (res) {
-        
-        let tempFilePaths = res.tempFilePaths;
+      success: function (res) {        
+        let tempFilePaths = res.tempFilePaths;        
         that.getImgInfo(tempFilePaths[0]);        
       }
     })
+  },
+  onUpload:function(result,res,submitName){
+    if (result == "fail") {
+      common.showErrorTip("图片上传失败");
+      return false;
+    }
+    switch (submitName){
+      case 'submitLogo':
+        console.log(submitName+"图片上传成功:");
+        console.log(res);
+        break;
+    }
   },
   delImg:function(){
     that.setData({
@@ -232,6 +244,7 @@ Page({
     let inputAddress = that.data.mapInfo ? that.data.mapInfo.address : '';
     let inputCoordinate = that.data.inputCoordinate;
     let inputDiffDistance = that.data.inputDiffDistance;
+    let inputDeclaration = that.data.inputDeclaration;
     flag = common.verifyNull(inputWx, "微信号");
     flag = common.verifyNull(inputName,"联系人");
     flag && (flag = common.verifyTel(inputTel));
@@ -251,6 +264,7 @@ Page({
           nick_name: that.data.userInfo.nickName,
           wx: inputWx,
           address: inputAddress,
+          declaration: inputDiffDistance,
           //distance: inputDiffDistance,
           gender: that.data.userInfo.gender,
           city: that.data.userInfo.city,
@@ -278,6 +292,10 @@ Page({
     that.setData({ inputAddress: curVal })
   },
   getDiffDistance: function (e) {
+    let curVal = e.detail.value;
+    that.setData({ inputDiffDistance: curVal })
+  },
+  getDeclaration: function (e) {
     let curVal = e.detail.value;
     that.setData({ inputDiffDistance: curVal })
   },
@@ -391,7 +409,14 @@ Page({
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
       success: function (res) {
-        that.setData({ logo: res.tempFilePaths[0] });
+        let tempFilePaths = res.tempFilePaths;
+        that.setData({ logo: tempFilePaths[0] });
+        let params = {
+          _C: "pic",
+          _A: "upload",
+          path: "logo"
+        }
+        common.uploadFile(that, "submitLogo", tempFilePaths[0], params);
       }
     })    
   },
@@ -417,4 +442,5 @@ Page({
       }
     })
   }
+  
 })

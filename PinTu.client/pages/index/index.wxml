@@ -14,7 +14,7 @@
   <view class="f">
     <image class="w180 mt50" bindtap="addImg" src="../../image/camera_big.png" mode="widthFix"></image>
   </view>
-  <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="share">
+  <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="generatePuzzles">
     <icon class='iconfont icon-eit f16'></icon> 联系客服
   </view>
   <view class="cyellow f14 pb100 dn">
@@ -114,7 +114,7 @@
         <view class="F_ h50 lh50 bbox">
           <label class="tr w60">logo：</label>
           <view class='f pl5 bbox h50' bindtap="uploadLogo">
-                <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
+            <image class="w45 h45 m2 r" mode="aspectFill" src="{{logo}}"></image>
           </view>
         </view>
         <view class="F_">

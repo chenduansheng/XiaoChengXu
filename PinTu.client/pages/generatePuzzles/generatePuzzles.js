@@ -40,15 +40,40 @@ Page({
     let curVal = e.detail.value;
     that.setData({ inputDiffDistance: curVal })
   },
-  uploadLogo: function () {
+  chooseImg: function () {
     wx.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
       success: function (res) {
         that.setData({ logo: res.tempFilePaths[0] });
+        that.uploadFile(res.tempFilePaths[0]);        
       }
     })
+  },
+  uploadFile: function (imgSrc){
+    let src = imgSrc ? imgSrc : '';
+    let privateInfo = wx.getStorageSync("pivateInfo");
+    let params = {
+      _C : "pic",
+      _A : "upload",
+      openid: privateInfo.openId
+    }
+    wx.uploadFile({
+      url: common.baseUrl+"/index.php",
+      filePath: imgSrc,
+      name: 'file',
+      formData: params,
+      success:function(res){
+        console.log("图片上传成功：");
+        console.log(res);
+      },
+      fail:function(res){
+        console.log("图片上传失败：");
+        console.log(res);
+      }
+    })
+
   },
   getNo1:function(e){
     var no1 = parseFloat(e.detail.value);
@@ -129,6 +154,9 @@ Page({
         switch (methodName) {
           case 'submitActive':
             common.urlTarget("share");
+            break;
+          case 'submitImg':
+            
             break;
         }
 
