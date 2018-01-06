@@ -4,23 +4,22 @@
     "pages/logs/logs",
     "pages/postersList/postersList",
     "pages/my/my",
-    "pages/test/test",
-    "pages/test2/test2",
     "pages/generatePuzzles/generatePuzzles",
     "pages/share/share",
-    "pages/ranking/ranking"
+    "pages/ranking/ranking",
+    "pages/beginPuzzles/beginPuzzles"
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#cb634a",
+    "navigationBarBackgroundColor": "#f6d94d",
     "navigationBarTitleText": "海报拼图",
-    "navigationBarTextStyle":"white"
+    "navigationBarTextStyle":"black"
   },
   "tabBar": {
     "color": "#777",
-    "backgroundColor": "#ffe3c8",
+    "backgroundColor": "#f6d94d",
     "borderStyle": "black",
-    "selectedColor": "#cb634a",
+    "selectedColor": "#d68512",
     "position": "bottom",
     "list": [{
       "pagePath": "pages/index/index",

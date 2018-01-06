@@ -33,17 +33,17 @@ Page({
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
           success: function (res) {       // 将encryptedData、iv传给后台解密=>获取群id
-            console.log("get转发信息成功：");
+            console.log("share界面转发成功：");
             console.log(res);
           },
           fail: function (res) {
-            console.log("get转发信息失败：");
+            console.log("share界面转发失败：");
             console.log(res);
           }
         })
       },
       fail:function(res){
-        console.log("转发失败，来自：" + ret.from);
+        console.log("share转发失败，来自：" + ret.from);
         console.log(res);
       }
     }

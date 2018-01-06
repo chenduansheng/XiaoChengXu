@@ -48,6 +48,8 @@ select::-ms-expand { display: none; }
 .fsc{align-self: center}
 .jce,.jcfe{justify-content: flex-end}
 .jcc{justify-content: center}
+.jcs{justify-content: flex-start}
+.jce{justify-content: flex-end}
 
 /* display */
 .db{display:block}
@@ -138,23 +140,25 @@ select::-ms-expand { display: none; }
 .bgopacity3{background: rgba(255, 255, 255, 0.3)}
 
 /* 本项目:主要用色 */
-.cmain{color: #cb634a}
+.cmain{color: #d68512}
 .cdefault{color: #5ad659}
 .cgrey,.clrgrey{color: #909090}
 .cred{color: #cc0000}
 .cblue{color: #2782D7}
-.cyellow{color:#ffcc99}
+/* .cyellow{color:#ffcc99} */
+.cyellow{color:#d68512}
 .cyellow0{color:#ffff00}
 .corange{color:orange}
 .ct{color: transparent}
 .bgdefault{background-color: #5ad659}
-.bgmain{background-color: #cb634a}
+/* .bgmain{background-color: #cb634a} */
+.bgmain{background-color: #fffded}
 .bggrey{background-color: #d8d8d8}
 .bggrey2{background-color: #909090}
 .bggreen{background-color: #5ad659}
 .bgred{background-color: #cc0000}
 .bgblue{background-color: #2782D7}
-.bgyellow{background-color: #ffcc99}
+.bgyellow{background-color: #efc601}
 .bgorange{background-color: orange}
 .bgpink{background-color: #fff1ea}
 .bgred2{background-color: #cd533e}
@@ -167,6 +171,7 @@ select::-ms-expand { display: none; }
 .bgrey{border:1px solid #d8d8d8}
 .bgrey2{border:1px solid #909090}
 .bred{border:1px solid #f9555d}
+.bgolden{border:1px solid #f6d94d}
 
 /* border      0~9 a~f */   
 .bbblue{border-bottom: 1px solid #2782D7}

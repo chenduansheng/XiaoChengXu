@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -21,7 +21,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 4,
+			"current": 6,
 			"list": [
 				{
 					"id": -1,
@@ -59,6 +59,12 @@
 					"pathName": "pages/share/share",
 					"query": "",
 					"scene": "1044"
+				},
+				{
+					"id": -1,
+					"name": "开始拼图&结果排名",
+					"pathName": "pages/beginPuzzles/beginPuzzles",
+					"query": ""
 				}
 			]
 		}

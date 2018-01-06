@@ -2,27 +2,24 @@
 const app = getApp();
 const common = require("../../js/common.js");
 var that = '';
-
+var curArrIndex = 0;    // 当前活动图片数组下标
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     moneyNo1:'',
     moneyNo2: '',
     moneyNo3: '',
     moneyNo4: '',
     moneyTotal: '',
-    group:1,
-    moneyService:8,
+    group:10,
+    moneyService:0.01,
     diffDistance:'',
     radioSex:'',
     inputDiffDistance:'',
     inputDescription:'',
     logo: '../../image/camera.png',
     poster:'../../image/poster001.png',
-    onlinePoster:''
+    onlinePoster:'',
+    arrActive: ['../../image/camera.png']
   },
   onLoad: function (options) {
     that = this;
@@ -31,7 +28,7 @@ Page({
   onReady: function () {
   
   },
-  onShow: function () {    
+  onShow: function () {
 
   },
   onShareAppMessage: function () {
@@ -42,22 +39,29 @@ Page({
   },
   getDiffDistance: function (e) {
     let curVal = e.detail.value;
+    curVal = parseInt(curVal);
     that.setData({ inputDiffDistance: curVal })
   },
   getDescription: function (e) {
     let curVal = e.detail.value;
-    that.setData({ inputDescription: curVal })
+    if (curVal.length <= 140){
+      that.setData({ inputDescription: curVal })
+    }else{
+      common.showErrorTip("最多140字符");
+    }
+    
   },
-  chooseImg: function () {
+  chooseImg: function (e) {
+    curArrIndex = e.currentTarget.dataset.index;
     wx.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
       success: function (res) {
         let tempFilePaths = res.tempFilePaths;
-        that.setData({ logo: tempFilePaths[0] });
+        //that.setData({ logo: tempFilePaths[0] });
         let params = {
-          path: "active"
+          path: "act"
         }
         common.uploadFile(that, "submitActiveImg", tempFilePaths[0], params);    
       }
@@ -86,16 +90,17 @@ Page({
     let no4 = no3 * 0.2;
     let group = that.data.group;
     let moneyService = that.data.moneyService;
-    let moneyTotal = moneyService + group * (no1 + no2 + no3 + no4 * 7);
+    let moneyTotal = parseFloat(moneyService) + group * (no1 + no2 + no3 + no4 * 7);
     that.setData({
       moneyNo1: no1.toFixed(2),
       moneyNo2: no2.toFixed(2),
       moneyNo3: no3.toFixed(2),
       moneyNo4: no4.toFixed(2),
-      moneyTotal: moneyTotal.toFixed(2)
+      moneyTotal: moneyTotal.toFixed(2),
+      moneyService: (moneyTotal * 0.02).toFixed(2)
     })
   },
-  clickGenerate:function(){
+  clickGenerate:function(){ 
     if (!that.data.moneyNo1){
       common.showErrorTip("请先完善信息");
       return false;
@@ -105,7 +110,14 @@ Page({
     }
     common.uploadFile(that, "submitPoster", that.data.poster, params);
   },
-  submitActive:function(){
+  submitActive:function(){   
+    var arrActive = that.data.arrActive.concat();
+    if (arrActive.includes("../../image/camera.png")) { // 有"../../image/camera.png"
+      arrActive.splice(-1, 1);   // 需要提交的活动图片数组
+    }
+    for (let [index, elem] of arrActive.entries()) {
+      arrActive[index] = elem.replace("http://xcx.s1.welcomest.com/pintu/images/", '');
+    } 
     let params = {
       _C: "Act",
       _A: "insertOne",
@@ -123,7 +135,8 @@ Page({
         'limit_sex': that.data.radioSex,// '【1男，2女】',
         'limit_distance': that.data.inputDiffDistance,//'限制距离【单位米】',
         "description": that.data.inputDescription,
-        'pic': that.data.onlinePoster
+        'pic': that.data.onlinePoster,
+        "description_pic": arrActive
       })
     }
     common.request("submitActive", that, "form", params);
@@ -146,7 +159,7 @@ Page({
             let nonceStr = info.nonceStr;
             let pkg = info.package;
             let paySign = info.paySign;
-            let orderId = '';
+            let orderId = '';            
             common.wxpay(timeStamp, nonceStr, pkg, paySign,that);            
             break;
         }
@@ -186,7 +199,14 @@ Page({
         common.request("getWxPayInfo", that, "form", params);        
         break;
       case 'submitActiveImg':
-
+        var arrActive = that.data.arrActive.concat();
+        if (arrActive.length <= 6){
+          arrActive[curArrIndex] = pic;
+          if (curArrIndex >= arrActive.length - 1 && arrActive.length != 6){  // 当前下标是当前展示的最后一个，则可添加新的图片
+            arrActive[arrActive.length] = "../../image/camera.png";
+          }          
+        }
+        that.setData({ arrActive: arrActive});
         break;
     }
   },

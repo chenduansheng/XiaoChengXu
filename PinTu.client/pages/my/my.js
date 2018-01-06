@@ -3,50 +3,34 @@ const app = getApp();
 const common = require('../../js/common.js');
 var that = '';
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     userInfo:'',
-    balance:33.00,
+    balance:0,
     posterNum:134
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
     that = this;
+    // let _DATA = {
+    //   'type' :'5',// 活动id
+    //   'money' :6.6
+    // }
+    // let params = {
+    //   _C: 'Money',
+    //   _A: 'insertOne',
+    //   _DATA: JSON.stringify(_DATA)
+    // }
+    // common.request("insertMoney", that, "form", params);
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady: function () {
     
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
     that.setData({ userInfo: app.globalData.userInfo })
-    console.log(app.globalData.userInfo);
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-  
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
+    let params = {
+      _C:'Money',
+      _A:'selectOne'
+    }
+    common.request("getBalance", that, "form", params);
   },
 
   /**
@@ -60,7 +44,7 @@ Page({
    * 页面上拉触底事件的处理函数
    */
   onReachBottom: function () {
-  
+    
   },
 
   /**
@@ -70,20 +54,24 @@ Page({
   
   },
   onSuccess: function (methodName, res) {
-    console.log(methodName);
-    console.log(res);
     if (res.statusCode == 200) {
       let ret = res.data;
       if (ret.code == 200) {
         let data = ret.data;
+        let info = data.data;
         switch (methodName) {
-          case 'sendCode':
-
+          case 'getBalance':
+            var curBalance = 0.0;
+            if(info){
+              curBalance = info.money;
+            }
+            that.setData({ balance: curBalance})
             break;
         }
 
       } else {
-        common.showErrorTip(ret.msg);
+        console.log(ret);
+        // common.showErrorTip(ret.msg);
       }
     } else {
       console.log("接口有问题：" + methodName);

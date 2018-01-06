@@ -131,7 +131,8 @@ function showErrorTip(text) {       // 显示错误提示
   wx.showToast({
     title: text,
     icon:'loading',
-    //image: '../../image/iocn_error.png',
+    image: '../../image/icon_warn.png',
+    // mask:true,
     duration: 1500
   })
 }

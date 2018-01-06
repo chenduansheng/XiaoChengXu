@@ -1,10 +1,14 @@
 <!--pages/postersList/postersList.wxml-->
 <view class="container f14 oh">
   <view class="tc p15-0 b f16 ls2">拼海报赢赏金</view>
-  <scroll-view class="f scroll" scroll-y="true">
-    <block wx:for="00000000000">
-      <view class="W5 bbox p10 {{index>1?'mt15':''}}">
-        <image class="W" mode="widthFix" src="../../image/poster001.png"></image>
+  <scroll-view class="f scroll" scroll-y="true" bindscrolltolower="scrollToBottom">
+    <block wx:for="{{arrPoster}}">
+      <view class="W5 bbox pl10 pt10 pr10 pb5 {{index>1?'mt15':''}}">
+         <image class="W" mode="widthFix" src="{{imgDir+item.pic}}"></image> 
+        <view class="tc h25 lh25 ell F_ jcc c3 f12">
+          <image class="w25 h25 r mr10" src="{{userInfo.avatarUrl}}"></image>
+          {{userInfo.nickName}}
+        </view>
       </view>
     </block>
   </scroll-view>
