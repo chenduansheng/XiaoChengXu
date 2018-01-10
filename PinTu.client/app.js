@@ -55,8 +55,8 @@ App({
     userInfo: null,
     phoneInfo:'',
     //code:'',
-    //imgDir:"http://xcx.s1.welcomest.com/images/",
-    imgDir:"http://xcx.s1.welcomest.com/pintu/images/"
+    imgDir:"https://xcxs1.xizai.com/pintu/images/",
+    //imgDir:"http://xcx.s1.welcomest.com/pintu/images/"
     // sessionKey:'',
     // openId:'',
     // unionId:''

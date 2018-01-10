@@ -2,6 +2,8 @@
 const app = getApp();
 const common = require("../../js/common.js");
 var that = '';
+var curPage = 1;
+var totalPage = 1;
 Page({
 
   /**
@@ -11,8 +13,6 @@ Page({
     userInfo:'',
     selectBegin:0,
     selectEnd: 50,
-    curPage:1,
-    totalPage:1,
     arrPoster:[],
     imgDir:''
   },
@@ -44,6 +44,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    curPage = 1;
     that.getPosterList();
   },
 
@@ -83,7 +84,12 @@ Page({
         switch (methodName) {
           case 'getPosterList':
             //let length = data.list.length;
-            var arrPoster = that.data.arrPoster.concat(data.list);
+            var arrPoster = [];
+            if (curPage == 1){
+              arrPoster = arrPoster.concat(data.list)
+            }else{
+              arrPoster = that.data.arrPoster.concat(data.list);
+            }
             that.setData({
               arrPoster: arrPoster
             })
@@ -107,5 +113,10 @@ Page({
   },
   scrollToBottom:function(){
     console.log("---end---");
+  },
+  urlTarget:function(e){
+    let curId = e.currentTarget.dataset.id;
+    let url = e.currentTarget.dataset.url;
+    common.urlTarget(url,"","?aid="+curId);
   }
 })

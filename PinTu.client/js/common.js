@@ -25,6 +25,10 @@ function request(methodName, page, dataType, params) {
     _DATA = JSON.stringify(_DATA);
     params._DATA = _DATA;
   }    
+  if (methodName == "getMemberInfo"){
+    console.log("getMemberInfo-params:");
+    console.log(params);
+  }
   return wx.request({
     url: getRequestUrl(methodName),
     method: 'POST',
@@ -37,9 +41,11 @@ function request(methodName, page, dataType, params) {
       if (page)
         page.onSuccess(methodName,res);
     },
-    fail: function () {
+    fail: function (res) {
+      console.log(methodName);
+      console.log(res);
       if (page)
-        page.onFailed(methodName);
+        page.onFail(methodName);
     },
     complete: function () {
       if (page)
@@ -72,6 +78,10 @@ function uploadFile(page,submitName,imgSrc,params){
   params.openid = privateInfo.openId;  
   params._C = "Pic",
   params._A = "upload",
+  console.log("上传图片的参数：");
+  console.log(baseUrl + "/index.php");
+  console.log(imgSrc);
+  console.log(params);
   wx.uploadFile({
     url: baseUrl + "/index.php",
     filePath: imgSrc,

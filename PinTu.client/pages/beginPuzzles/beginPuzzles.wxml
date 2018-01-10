@@ -1,59 +1,62 @@
 <!--pages/beginPuzzles/beginPuzzles.wxml-->
+<view class="container W H oh bge">
 <view class="container W H f14">
   <scroll-view class="H scroll bbox" scroll-y="true">
     <view class="pr">
       <image class="W" mode='widthFix' src="{{posterSrc}}"></image>
       <view class="pa B0 W bgopacity p10 F_ bbox">
-        <block wx:for="0000000000" wx:for-index="index">
-          <image class="w25 h25 r" src="../../image/square.png"></image>
-        </block>
+          <block wx:for="0000000000" wx:for-index="index">
+            <image class="w25 h25 r bf" src="{{curGroup.list[index]?curGroup.list[index].user_info.avatarUrl:'../../image/head3.png'}}" mode='scaleToFill'></image>
+          </block>
       </view>
     </view>
-    <view class="F_ jcc p10-0">
-      <view class="r cf f16 W7 p5-0 bgorange tc" bindtap="openPuzzle">开始拼图赢赏金</view>
+    <view class="F_ jcc p10-0 bgf">
+      <view class="r cf f16 W7 p10-0 bgyellow tc" bindtap="openPuzzle">{{curGroup.is_finish?"活动已结束":"开始拼图赢赏金"}}</view>
     </view>
-    <view class="F_ h40 lh40">
+    <view class="F_ h40 lh40 bgf bte">
       <view class="f tc" bindtap="urlTarget" data-url="index">
-        <icon class="iconfont icon-homepage f20 mr5 vb corange"></icon> 
+        <icon class="iconfont icon-homepage f20 mr5 vb cyellow"></icon> 
         <text class='f dib lh30'>首页</text> 
       </view>  
       <view class="f tc" bindtap='urlTarget' data-url="index">
-        <icon class="iconfont icon-manage f20 mr5 vb corange"></icon> 
+        <icon class="iconfont icon-manage f20 mr5 vb cyellow"></icon> 
         <text class='f dib lh30'>发海报</text> 
       </view>
-      <view class="f tc" bindtap="">
-        <icon class="iconfont icon-redpacket f20 mr5 vb corange"></icon> 
+      <view class="f tc dn" bindtap="">
+        <icon class="iconfont icon-redpacket f20 mr5 vb cyellow"></icon> 
         <text class='f dib lh30'>提现</text> 
       </view>
-      <!-- <button class="f bbox" open-type="share" plain="true" style="border:none;color:#fff;font-size:32rpx;line-height:45px">
-        <icon class="iconfont icon-share f20 mr5 vb"></icon>分享
-      </button> -->
        <view class="f tc" bindtap="">
-        <icon class="iconfont icon-share f20 mr5 vb corange"></icon> 
-        <text class='f dib lh30'>分享</text> 
+        <button class="W H bbox " open-type='share' plain='true' style="border:none;color:#000;font-size:28rpx;line-height:40px"><icon class="iconfont icon-share f20 mr5 vb cyellow"></icon>分享</button>
       </view> 
     </view>
-    <view class="F_ bge p5-10 bbc btc bbox h50">
-      <view class="h40"><image class="w40 h40" src="../../image/square.png"></image></view>
+    <view class="F_ bgf p5-10 mt5 bbox h50 c7">
+      <view class="h40"><image class="w40 h40 bd" src="{{ainfo.user_info.logo? imgDir+ainfo.user_info.logo : ainfo.user_info.avatarUrl}}"></image></view>
       <view class="f pl10 F">
-        <view class="f f16 b ">{{ainfo.user_info.nick_name}}</view>
+        <view class="f f16 b cmain">{{ainfo.user_info.nick_name}}</view>
         <view class="f f12 F ell">
-          <!-- <view class="dib"> -->
-             <!-- <icon class="iconfont icon-coordinates h17 vt"></icon>  -->
-          <!-- </view> -->
-          距您***km
+          距您{{ainfo.limit_distance}}km
         </view>
       </view>
-      <view class="pl10 f14 ">
+      <view class="pl10 f14 " bindtap="contactPoster">
         联系TA
       </view>
+      <view><icon class="iconfont icon-enter pl10 c7 lh30 f18"></icon></view>
     </view>
+    <view class='p0-10 bbox bgf' wx:if="{{ainfo.description}}">
+      <view class="W p10-0 c7 bbox mt5 bbe f15 F_">
+        <view class="f">海报描述</view>
+        <view class="f12">投诉</view>
+      </view>
+      <view class="W lh20 p10 bge c7 bbox mt10">{{ainfo.description}}</view>
+      <view class="W h10"></view>
+    </view> 
 
-    <view class=""></view>
-
-    <block wx:for="00">
-      <view class="">滚动</view>
-    </block>    
+    <block wx:for="{{ainfo.description_pic}}">
+      <view class="W bbox bgf {{index>1?'mt15':''}}">
+         <image class="W" mode="widthFix" src="{{imgDir+item.pic}}"></image>
+      </view>
+    </block>
   </scroll-view>
 </view>
 
@@ -64,14 +67,13 @@
         <icon class="iconfont icon-time f16 vb ell"></icon>
         用时{{useTime}}秒
       </view>
+      <view class="W tc pt20 cc">点击两张图片交换位置</view>
     </view>
-
-    <!-- <image class="C4 w90 h90 dib m0 bbox {{preIndex === index ? 'bgolden' : 'bc'}}" src="../../image/2018.png" data-src="{{arrPic[0]}}"></image> -->
 
     <view class="f F_ jcc">
       <view class="w270 h270 bbox pr">      
         <block wx:for="{{arrPic}}">
-          <image class="C4 h90 dib m0 bbox {{preIndex === index ? 'bgolden' : 'bc'}}" src="{{arrPic[index]}}" data-index="{{index}}" data-src="{{arrPic[index]}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          <image class="C4 h90 dib m0 bbox {{preIndex === index ? 'bRose' : 'bc'}}" src="{{arrPic[index]}}" data-index="{{index}}" data-src="{{arrPic[index]}}" mode="scaleToFill" bindtap="exchangePic"></image>
         </block>
       </view>  
     </view>
@@ -85,6 +87,12 @@
   </view>
 
 <!--  -->
-<view class="">
-  <canvas class="w270 h270 bggreen z1" canvas-id="myCanvas" style="display: block!important;"></canvas>
-</view>  
+  <view class="h0">
+    <canvas class="w270 h270 bggreen z1" canvas-id="myCanvas" style="display: block!important;"></canvas>
+  </view>  
+</view>
+
+<!-- 拼图成功  -->
+<!-- <view class="container W bgopacity F_">
+  <view class="W8 mt010 bge r4">拼图成功</view>
+</view> -->

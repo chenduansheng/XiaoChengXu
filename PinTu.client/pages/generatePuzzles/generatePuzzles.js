@@ -53,6 +53,9 @@ Page({
   },
   chooseImg: function (e) {
     curArrIndex = e.currentTarget.dataset.index;
+    wx.showLoading({
+      title: '图片加载中...',
+    })
     wx.chooseImage({
       count: 1,
       sizeType: ['original', 'compressed'],
@@ -63,15 +66,19 @@ Page({
         let params = {
           path: "act"
         }
+        console.log("上传的图片文件：" + tempFilePaths[0]);
         common.uploadFile(that, "submitActiveImg", tempFilePaths[0], params);    
+      },
+      fail:function(){
+        wx.hideLoading();
       }
     })
   },
   getNo1:function(e){
     var no1 = parseFloat(e.detail.value);
-    if (!no1 || no1 < 2) {
-      common.showErrorTip("冠军最低2元");
-      no1 = 2;
+    if (!no1 || no1 < 1) {
+      common.showErrorTip("冠军最低1元");
+      no1 = 1;
     }
     that.computeMoney(no1);
   },
@@ -85,9 +92,9 @@ Page({
   computeMoney:function(no1){
     var no1 = no1 ? no1 : (that.data.moneyNo1 ? that.data.moneyNo1:2);
     no1 = parseFloat(no1);
-    let no2 = no1 * 0.2;
-    let no3 = no2 * 0.2;
-    let no4 = no3 * 0.2;
+    let no2 = no1 * 0.5;
+    let no3 = no2 * 0.5;
+    let no4 = no3 * 0.5;
     let group = that.data.group;
     let moneyService = that.data.moneyService;
     let moneyTotal = parseFloat(moneyService) + group * (no1 + no2 + no3 + no4 * 7);
@@ -105,10 +112,16 @@ Page({
       common.showErrorTip("请先完善信息");
       return false;
     }
+    wx.showLoading({
+      title: '信息提交中...',
+    })
     let params = {
       path: "act/poster"
     }
-    common.uploadFile(that, "submitPoster", that.data.poster, params);
+    setTimeout(function(){
+      common.uploadFile(that, "submitPoster", that.data.poster, params);
+    },300)
+    
   },
   submitActive:function(){   
     var arrActive = that.data.arrActive.concat();
@@ -116,7 +129,7 @@ Page({
       arrActive.splice(-1, 1);   // 需要提交的活动图片数组
     }
     for (let [index, elem] of arrActive.entries()) {
-      arrActive[index] = elem.replace("http://xcx.s1.welcomest.com/pintu/images/", '');
+      arrActive[index] = elem.replace(app.globalData.imgDir, '');
     } 
     let params = {
       _C: "Act",
@@ -159,7 +172,8 @@ Page({
             let nonceStr = info.nonceStr;
             let pkg = info.package;
             let paySign = info.paySign;
-            let orderId = '';            
+            let orderId = '';  
+            wx.hideLoading();          
             common.wxpay(timeStamp, nonceStr, pkg, paySign,that);            
             break;
         }
@@ -178,6 +192,7 @@ Page({
 
   },
   onUpload: function (result, res, submitName) {  
+    console.log(res);
     let data = JSON.parse(res.data);  
     if (result == "fail" || res.statusCode != 200 || data.code != 200) {
       common.showErrorTip(submitName + "上传失败");
@@ -188,7 +203,7 @@ Page({
     let pic = app.globalData.imgDir + info.pic;
     console.log(submitName + "服务器图片地址：" + pic);
     switch (submitName) {
-      case 'submitPoster':
+      case 'submitPoster':        
         that.setData({ onlinePoster: info.pic})
         let params = {
           _C:'Pay',
@@ -207,6 +222,7 @@ Page({
           }          
         }
         that.setData({ arrActive: arrActive});
+        wx.hideLoading();
         break;
     }
   },

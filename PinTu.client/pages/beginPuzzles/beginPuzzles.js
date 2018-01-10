@@ -1,10 +1,11 @@
 // pages/beginPuzzles/beginPuzzles.js
-// pages/ranking/ranking.js
 const app = getApp();
 const common = require('../../js/common.js');
 var that = '';
-var interval = '';
+var intervalUseTime = '';
 var arrSmallPics = [];
+var arrPic0 = [];
+var arrPic = [];
 Page({
   data: {
     gid: '',       // 群id
@@ -20,16 +21,18 @@ Page({
     prePic: '',
     arrPic0: [],   // 原始九宫格
     arrPic: [],   // 交换后的九宫格
-    arrRank: [],   // 拼图成绩排名
+    curGroup: [],   // 当前组信息
     hasMe: '',     // 是否已拼过该海报
-    canvasId: 'myCanvas'
+    canvasId: 'myCanvas',
+    imgDir:''
   },
   onLoad: function (options) {
     that = this;
     let aid = options.aid;
     let gid = options.gid;
     that.setData({
-      aid: aid ? aid : 26,
+      imgDir: app.globalData.imgDir,
+      aid: aid ? aid : 3,
       gid: gid ? gid : ''
     })
     wx.showShareMenu({
@@ -39,39 +42,54 @@ Page({
   onReady: function () {
 
   },
-  onShow: function () {
+  onUnload:function(){
+    arrSmallPics = [];
+    arrPic0 = [];
+    arrPic = [];
+    clearInterval(intervalUseTime);
+    that.setData({ useTime:0})    
+  },
+  onShow: function () {    
     that.setData({
-      avatar: app.globalData.userInfo ? app.globalData.userInfo.avatarUrl : '../../image/2018.png'
+      avatar: app.globalData.userInfo ? app.globalData.userInfo.avatarUrl : '../../image/2018.png',
+      useTime:0,
+      imgDir: app.globalData.imgDir
     });
+    clearInterval(intervalUseTime);
     that.getActiveInfo();
   },
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage: function (ret) {
+    var diffPeople = 10 - that.data.curGroup.list.length;
     return {
-      title: "海报拼图赢赏金",
-      path: "/pages/share?aid=" + that.data.aid,
+      title: "【仅剩" + diffPeople+"人】快来拼图赢赏金",
+      path: "/pages/index/index?aid=" + that.data.aid,
+      // imageUrl:"../../image/2018.png",
       success: function (res) {
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
           success: function (res) {       // 将encryptedData、iv传给后台解密=>获取群id
-            console.log("ranking界面转发成功：");
+            console.log("beginPuzzles界面转发成功：");
             console.log(res);
           },
           fail: function (res) {
-            console.log("ranking界面转发失败：");
+            console.log("beginPuzzles界面转发失败：");
             console.log(res);
           }
         })
       },
       fail: function (res) {
-        console.log("ranking转发失败，来自：" + ret.from);
+        console.log("beginPuzzles转发失败，来自：" + ret.from);
         console.log(res);
       }
     }
   },
   getActiveInfo: function () {
+    wx.showLoading({
+      title: '加载中...',
+    })
     let params = {
       _C: 'Act',
       _A: 'selectOne',
@@ -86,31 +104,62 @@ Page({
   },
   openPuzzle: function () {
     let ainfo = that.data.ainfo;
+    if (that.data.curGroup.is_finish){         // 1代表活动结束
+      common.showErrorTip("此拼图活动结束");
+      return false;
+    }
     if (that.data.hasMe) {
-      common.showErrorTip("此拼图您已拼过");
-      //return false;
+      common.showErrorTip("此拼图您已玩过");
+      return false;
     }
     if (ainfo.limit_sex > 0) {           // 性别限制1男，2女
-      if (ainfo.limit_sex != app.globalData.userInfogender) {
-        common.showErrorTip("此拼图限制性别");
+      if (ainfo.limit_sex != app.globalData.userInfo.gender) {
+        ainfo.limit_sex==1 && common.showErrorTip("男生才能玩");
+        ainfo.limit_sex== 2 && common.showErrorTip("女生才能玩");
         return false;
       }
     }
-    if (ainfo.limit_distance > 0) {     // 距离限制
-      // 计算当前与海报距离
+    if (ainfo.limit_distance < 0) {     // 距离限制
+      // 计算当前用户与海报距离
+      let posterLat = ainfo.user_info.lat;
+      let posterLng = ainfo.user_info.lng;
+      //let userMap = that.openScopeMap();    // --------- 需要做异步处理
+      // let intervalMap = setInterval(function(){
 
-    }
-    // 切割的图片数组打散
+      // });
+      //var distance = that.getDistance(posterLat, posterLng, userMap.latitude, userMap.longitude);
+      // var distance = that.getDistance(posterLat, posterLng, 28.23529, 112.93134); // km
+      // if (ainfo.limit_distance < distance){
+      //   let diffDistace = (distance - ainfo.limit_distance).toFixed(2);
+        //common.showErrorTip("超出范围" + diffDistace+"km");
+        //return false;
+      // }
+      that.openScopeMap();
+
+    }else{
+      // 切割的图片数组打散
+      if (!arrPic0) {
+        setTimeout(function () {
+          that.viewPuzzle();
+        }, 300)
+      } else {
+        that.viewPuzzle();
+      }
+
+    }    
+    
+  },
+  viewPuzzle:function(){
     that.randomPics();
     that.setData({ showPuzzle: true });
     var time = 0;
-    interval = setInterval(function () {
+    intervalUseTime = setInterval(function () {
       time += 1;
       that.setData({ useTime: time })
     }, 1000)
   },
   cancelGame: function () {
-    clearInterval(interval);
+    clearInterval(intervalUseTime);
     that.setData({
       showPuzzle: false,
       useTime: 0,
@@ -118,6 +167,7 @@ Page({
       prePic: '',
       arrPic: that.data.arrPic0   // 恢复原九宫格位置
     })
+    arrPic = arrPic0.concat();
   },
   onSuccess: function (methodName, res) {
     console.log(methodName);
@@ -135,10 +185,11 @@ Page({
               that.setData({
                 ainfo: curInfo,
                 posterSrc: poster,
-                arrRank: data.user_data_one_group,
+                curGroup: data.user_data_one_group,
                 hasMe: data.is_i_in,
                 gid: data.group_id
               })
+              wx.hideLoading();
               that.canvas();
             }
             break;
@@ -150,11 +201,12 @@ Page({
 
 
             // 更新当前组海报排名
-            thatgetActiveInfo();
+            that.getActiveInfo();
             break;
         }
 
       } else {
+
         console.log(ret);
       }
     } else {
@@ -195,7 +247,7 @@ Page({
       }
       if (flag) {
         common.showSuccessTip("拼图成功！");
-        clearInterval(interval);
+        clearInterval(intervalUseTime);
         // 插入一条成绩
         let _DATA = {
           'act_id': that.data.aid,// 活动id
@@ -217,26 +269,61 @@ Page({
     }
   },
   randomPics: function () {
-    var arrPic0 = that.data.arrPic0;
+    // var arrPic0 = that.data.arrPic0;
     var arrPic = arrPic0.concat();
     arrPic = arrPic.sort(function () {
       return (0.5 - Math.random());
     })
-    that.setData({
-      arrPic: arrPic
-    })
+    
+    // var flag = true;
+    // for (let [index, elem] of arrPic.entries()) {   // 如果未打乱，则再打乱一次
+    //   if (elem != arrPic0[index]) {
+    //     flag = false;
+    //   }
+    // }
+    // if(flag){
+    //   console.log("相同，继续打乱...")
+    //   arrPic = arrPic.sort(function () {
+    //     return (0.5 - Math.random());
+    //   })
+    //   setTimeout(function(){
+    //     that.setData({
+    //       arrPic: arrPic
+    //     })
+    //   },300)
+    // }else{
+      
+      setTimeout(function(){
+        that.setData({
+          arrPic: arrPic
+        })
+      },500)
+
+    // }
+
+    
   },
   canvas: function () {
-    var arrSmallPics = [];
-    const ctx = wx.createCanvasContext(that.data.canvasId);
-    ctx.save();
-    ctx.drawImage(that.data.posterSrc, 0, 0, 270, 270);
-    ctx.restore();
-    ctx.draw();
-    setTimeout(function () {
-      that.getSmallPics(0);
-    }, 500)
-
+    var tempPoster = '';
+    wx.getImageInfo({
+      src: that.data.posterSrc, //"https://pintu.xizai.com/meinv1.jpg"
+      success:function(res){
+        //console.log(res);
+        tempPoster = res.path;
+        var arrSmallPics = [];
+        let ctx = wx.createCanvasContext(that.data.canvasId);
+        ctx.setGlobalAlpha(0.8);
+        ctx.drawImage(tempPoster, 0, 0, 270, 270);
+        ctx.draw();
+        setTimeout(function () {
+          that.getSmallPics(0);
+        }, 500)
+      },
+      fail:function(res){
+        console.log(res);
+      }
+    })
+    
   },
   getSmallPics: function (index, x, y) {
     let nextIndex = index + 1;
@@ -252,10 +339,13 @@ Page({
         if (index < 9) {
           arrSmallPics[index] = res.tempFilePath;
           that.getSmallPics(nextIndex, (nextIndex % 3) * 90, parseInt(nextIndex / 3) * 90);
+          //console.log(index + "---" + arrSmallPics[index]);
           if (index == 8) {
+            arrPic0 = arrSmallPics;
+            arrPic = arrPic0.concat();
             that.setData({
               arrPic0: arrSmallPics,
-              arrPic: arrSmallPics
+              arrPic: arrSmallPics,
             })
           }
         }
@@ -263,6 +353,67 @@ Page({
       fail: function (res) {
         console.log(res);
       }
+    })
+  },
+  getDistance: function (lat1, lng1, lat2, lng2){     // 两个经纬度间的距离
+    var radLat1 = lat1 * Math.PI / 180.0;
+    var radLat2 = lat2 * Math.PI / 180.0;
+    var a = radLat1 - radLat2;
+    var b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
+    var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+    s = s * 6378.137;
+    s = Math.round(s * 10000) / 10000;
+    return s;
+  },
+  openScopeMap: function () {    // 开启地图授权
+    wx.getLocation({
+      success: function (res) {        
+        console.log("用户当前latitude:" + res.latitude);
+        console.log("用户当前longitude:" + res.longitude);
+        let ainfo = that.data.ainfo;
+        let posterLat = ainfo.user_info.lat;
+        let posterLng = ainfo.user_info.lng;
+        let userMap = res;
+        var distance = that.getDistance(posterLat, posterLng, userMap.latitude, userMap.longitude);// km
+        console.log("海报posterLat:" + posterLat + "，posterLng：" + posterLng);
+        console.log("拼图者latitude:" + userMap.latitude + "，longitude：" + userMap.longitude);
+        if (ainfo.limit_distance < distance) {
+          let diffDistace = (distance - ainfo.limit_distance).toFixed(2);
+          common.showErrorTip("超出范围" + diffDistace+"km");
+          console.log(("超出范围" + diffDistace + "km"));
+          //return false;
+        }else{
+          if (!arrPic0) {
+            setTimeout(function () {
+              that.viewPuzzle();
+            }, 300)
+          } else {
+            that.viewPuzzle();
+          }
+          //return true;
+        }
+      },
+      fail: function () {
+        common.showErrorTip("位置未授权");
+        setTimeout(function () {
+          that.openSetting();
+        }, 1500)
+      }
+    })
+
+  },
+  openSetting: function () {   // 打开授权设置引导界面
+    wx.openSetting({
+      success: function (res) {
+        if (res.authSetting['scope.userLocation']) {
+          that.openScopeMap();
+        }
+      }
+    });
+  },
+  contactPoster:function(){
+    wx.makePhoneCall({
+      phoneNumber: that.data.ainfo.user_info.mobile.toString(),
     })
   }
 })

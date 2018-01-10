@@ -6,12 +6,14 @@ Page({
   data: {
     avatar: '',
     qrCode:'../../image/2018.jpg',    // 二维码
-    aid:''
+    aid:'',
+    imgDir:""
   },
   onLoad: function (options) {
     that = this;
     that.setData({ 
-      aid: options.aid,
+      imgDir:app.globalData.imgDir,
+      aid: options.aid ? options.aid:2,
       qrCode: options.poster
     })
     console.log(options);
@@ -21,6 +23,17 @@ Page({
   },
   onShow: function () {
     that.setData({ avatar: app.globalData.userInfo?app.globalData.userInfo.avatarUrl:'../../image/2018.jpg'})
+    let _DATA = {
+      // scene: "aid=" + that.data.aid,
+      // page:"pages/share/share",
+      path: "pages/share/share?aid=" + that.data.aid
+    }
+    let params = {
+      _C:'Code2d',
+      _A:'get',
+      _DATA: JSON.stringify(_DATA)      
+    }
+    common.request("getQrcode",that,"form",params);
     wx.showShareMenu({
       withShareTicket:true
     })    
@@ -28,7 +41,8 @@ Page({
   onShareAppMessage: function (ret) {
     return{
       title:"share海报拼图",
-      path:"/pages/share?aid="+that.data.aid,
+      path:"/pages/share?aid="+that.data.aid, 
+      // imageUrl:"http://xcx.s1.welcomest.com/pintu/images/act/poster/wx3d00770652053edd.o6zAJs9bs--3Qn1Jkc_lFPynmD4A.e756eb43cc22c1f2e0c4c63623777dd5.png",
       success:function(res){              // 转发成功
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
@@ -59,8 +73,10 @@ Page({
       if (ret.code == 200) {
         let data = ret.data;
         switch (methodName) {
-          case '':
-
+          case 'getQrcode':   // 获取二维码
+            let qrCodeSrc = that.data.imgDir + data.info.pic;
+            that.setData({ qrCode: qrCodeSrc});
+            console.log(qrCodeSrc);
             break;
         }
 
@@ -78,6 +94,20 @@ Page({
 
   },
   generateShareImg:function(){
-    common.showErrorTip("保存二维码图片");
+    that.previewImg();
+  },
+  previewImg:function(){
+    var arrUrl = [];
+    arrUrl[0] = that.data.qrCode;
+    wx.previewImage({
+      current: that.data.qrCode,
+      urls: arrUrl,
+      success:function(res){
+        
+      },
+      fail:function(res){
+        
+      }
+    })
   }
 })

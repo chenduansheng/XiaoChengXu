@@ -1,43 +1,49 @@
 <!--pages/generatePuzzles/generatePuzzles.wxml-->
 <view class='container oh bge c3 f14'>
   <scroll-view class="scroll bbox" scroll-y="">
+  <image class='W' src='{{poster}}' mode="widthFix"></image>
     <view class='h10'></view>
     <view class="c0 r2 m0-10 p0-10 bbox f12">
       <view class="F_ bby h35 lh35 dn">
         <label class="tr w60">玩法：</label>
         <view class='f pl5'>海报拼图</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ bgf r2 mt5 p0-10 bbox h40 lh40">
         <label class="tr w60">拼图组数：</label>
         <view class='f pl5'>
-          <input class="dib mr15" type='number' value="{{group}}" bindblur="getGroup" bindconfirm="getGroup" placeholder='比赛组数' placeholder-style='color:#ccc'></input>组</view>
+          <input class="dib W" type='number' value="{{group}}" bindblur="getGroup" bindconfirm="getGroup" placeholder='比赛组数' placeholder-style='color:#ccc'></input>
+        </view>
+        <view class='pl10'>组</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ bgf r2 mt5 p0-10 bbox h40 lh40">
         <label class="tr w60">冠军赏金：</label>
         <view class='f pl5'>
-          <input class='dib mr10' type="digit" bindblur="getNo1" bindconfirm="getNo1" placeholder='拼图速度最快的打赏金额' placeholder-style='color:#ccc' value="{{moneyNo1}}"></input>
-          元×1人
+          <input class='dib W' type="digit" bindblur="getNo1" bindconfirm="getNo1" placeholder='拼图速度最快的打赏金额' placeholder-style='color:#ccc' value="{{moneyNo1}}"></input>          
         </view>
+        <view class='pl10'>元×1人</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ r2 mt5 p0-10 bbox h40 lh40 bggrey">
         <label class="tr w60">亚军赏金：</label>
         <view class='f pl5'>
-          <text class="dib w40">{{moneyNo2}}</text>元×1人，冠军赏金的20%
+          <text class="dib W">{{moneyNo2}}</text>
         </view>
+        <view class='pl10'>元×1人，冠军赏金的50%</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ r2 mt5 p0-10 bbox h40 lh40 bggrey">
         <label class="tr w60">季军赏金：</label>
         <view class='f pl5'>
-          <text class="dib w40">{{moneyNo3}}</text>元×1人，冠军赏金的20%
+          <text class="dib W">{{moneyNo3}}</text>
         </view>
+        <view class='pl10'>元×1人，亚军赏金的50%</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ r2 mt5 p0-10 bbox h40 lh40 bggrey">
         <label class="tr w60">参与赏金：</label>
         <view class='f pl5'>
-          <text class="dib w40">{{moneyNo4}}</text>元×1人，冠军赏金的20%
+          <text class="dib W">{{moneyNo4}}</text>
         </view>
+        <view class='pl10'>元×7人，季军赏金的50%</view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ bgf r2 mt5 p0-10 bbox h40 lh40">
         <label class="tr w60">性别限制：</label>
         <view class='f pl5'>
           <radio-group bindchange="changeRadioSex">
@@ -53,10 +59,11 @@
           </radio-group>
         </view>
       </view>
-      <view class="F_ bgf r2 mt5 p0-10 bbox h35 lh35">
+      <view class="F_ bgf r2 mt5 p0-10 bbox h40 lh40">
         <label class="tr w60">距离限制：</label>
         <view class='f pl5 ell'>
-          <input class="dib mr15" type='number' value="{{diffDistance}}" bindinput="getDiffDistance"  placeholder='只有距您这个范围内的人才可以参与' placeholder-style='color:#ccc'></input>km</view>
+          <input class="dib W" type='number' value="{{diffDistance}}" bindinput="getDiffDistance"  placeholder='只有距您这个范围内的人才可以参与' placeholder-style='color:#ccc'></input></view>
+          <view class='pl10'>公里</view>
       </view>
       <view class="F_ bgf r2 mt5 p0-10 h35 lh35 bbox">
         <label class="tr w60">活动描述：</label>
@@ -88,7 +95,7 @@
       </view>
     </view>
 
-    <view class="tc mt10">请勿上传色情以及其他违禁图片，本小程序</view>
-    <view class="h20 tc">有权在收到投诉后删除相应内容</view>
+    <view class="tc mt10 dn">请勿上传色情以及其他违禁图片，本小程序</view>
+    <view class="h20 tc dn">有权在收到投诉后删除相应内容</view>
   </scroll-view>
 </view>

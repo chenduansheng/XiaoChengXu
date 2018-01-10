@@ -11,15 +11,15 @@
   ],
   "window":{
     "backgroundTextStyle":"light",
-    "navigationBarBackgroundColor": "#f6d94d",
+    "navigationBarBackgroundColor": "#FF0036",
     "navigationBarTitleText": "海报拼图",
-    "navigationBarTextStyle":"black"
+    "navigationBarTextStyle":"white"
   },
   "tabBar": {
     "color": "#777",
-    "backgroundColor": "#f6d94d",
+    "backgroundColor": "#fff",
     "borderStyle": "black",
-    "selectedColor": "#d68512",
+    "selectedColor": "#FF0036",
     "position": "bottom",
     "list": [{
       "pagePath": "pages/index/index",

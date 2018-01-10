@@ -87,12 +87,17 @@ Page({
   },
   onShow:function(){
     let privateInfo = wx.getStorageSync("pivateInfo");
+    console.log("缓存privateInfo：");
+    console.log(wx.getStorageSync("pivateInfo"));
     if (privateInfo.openId) {
-      that.getMemberInfo();
+      console.log("有openId，即将获取会员信息");
+      // setTimeout(function(){
+        that.getMemberInfo();
+      // },300)
     }else{
+      console.log("无openId，即将查看用户授权");
       that.getUserSetting();
     }
-    that.openScopeMap();
   },
   getUserInfo: function(e) {      // 获取用户微信信息
     // 判断是否有个人信息
@@ -106,16 +111,20 @@ Page({
     common.urlTarget(e.currentTarget.dataset.url);
   },
   addImg:function(){              // 点击选择拼图
-    if (that.data.hasMember){
-      that.chooseImg();
-    }else{
-      that.setData({ 
-        showHome: false,
-        showCanvas:false,
-        showMemberInfo: true
-      })
-    }
-    
+    that.delayAddImg();
+  },
+  delayAddImg:function(){         // 延迟判断是否有个人信息
+    setTimeout(function(){
+      if (that.data.hasMember) {
+        that.chooseImg();
+      } else {
+        that.setData({
+          showHome: false,
+          showCanvas: false,
+          showMemberInfo: true
+        })
+      } 
+    },300)
   },
   chooseImg:function(){   // 选择海报    
     wx.chooseImage({
@@ -128,7 +137,7 @@ Page({
           showMemberInfo: false,
           showCanvas: true
         });       
-        let tempFilePaths = res.tempFilePaths;        
+        let tempFilePaths = res.tempFilePaths;
         that.getImgInfo(tempFilePaths[0]);        
       }
     })
@@ -200,12 +209,11 @@ Page({
   exportImg:function(){
     wx.canvasToTempFilePath({
       canvasId: that.data.canvasId,
-      x: canvasMarginL,
-      y: canvasMarginT,
-      width:270,
-      height:270,
-      destWidth: 270,
-      destHeight: 270,
+      x: canvasMarginL+2,
+      y: canvasMarginT+2,
+      width:300-4,
+      height:300-4,
+      quality:1,
       success:function(res){
         console.log(res);
         that.setData({ 
@@ -304,6 +312,7 @@ Page({
         let info = res.data.data.info ? res.data.data.info : '';
         switch (methodName) {
           case 'getMemberInfo':  // 获取会员信息
+          console.log("会员信息获取成功");
             if(!info){
               that.setData({
                 hasMember: false
@@ -453,12 +462,13 @@ Page({
         });
         that.getUserSetting();  // 判断地图授权
         // 获取oppenid
+        console.log("获取oppenid");
         let code = wx.getStorageSync("code");
         let params = {
           _C: "Key",
           _A: "getWxId",
           code: code
-        }
+        }        
         common.request("getSessionKey", that, "form", params);
 
       },

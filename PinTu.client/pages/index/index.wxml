@@ -1,6 +1,6 @@
 <!--index.wxml-->
 <block wx:if="{{showHome}}">
-<view class="container H bgmain oh">
+<view class="container H bge oh">
   <view class="F_ jcc">
     <!-- <button class='m30' wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button> -->
     <button class='m30' wx:if="{{!hasUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 暂未授权 </button>
@@ -15,9 +15,10 @@
   <view class="f">
     <image class="w120 mt50" bindtap="addImg" src="../../image/camera_big2.png" mode="widthFix"></image>
   </view>
-  <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="generatePuzzles">
+  <!-- <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="generatePuzzles">
     <icon class='iconfont icon-eit f16'></icon> 联系客服
-  </view>
+  </view> -->
+  <view class="tc mt10 f14 c7 pb100">请勿上传色情以及其他违禁图片</view>
   <view class="cyellow f14 pb100 dn">
     <contact-button type="default-light" size="20" session-from="weapp">联系客服</contact-button>
   </view>
@@ -28,7 +29,7 @@
 <block wx:if="{{showCanvas}}">
 <view class="container H bg3 oh">
   <view class="f F W bbox">
-     <canvas class="W bbox" canvas-id="mycanvas" bindtouchend="touchEnd" bindtouchmove="touchMove"  style="height:{{canvasHeight}}px">
+     <canvas class="W bbox" canvas-id="mycanvas" bindtouchend="touchEnd" bindtouchmove="touchMove" disable-scroll="true" style="height:{{canvasHeight}}px">
      </canvas> 
   </view>
   <view class="F_ cf f16 bbox h50 lh50">
