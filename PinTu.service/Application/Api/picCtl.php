@@ -1,53 +1,58 @@
 <?php
 
-class Money extends Ctl{
-    
-    
-    public function GrabImage($url, $name = "") {
+class Pic extends Ctl{
+	
+    public function upload(){
         
-        $url = $param['url'];
-        $name = $param['name'];
-        
-        if ($url == ""):return false;
-        endif;
-        //如果$url地址为空，直接退出
-        if ($name == "") {
-            //如果没有指定新的文件名
-            $ext = strrchr($url, ".");
-            //得到$url的图片格式
-            if (!in_array($ext, [".png", ".jpg"])):return false;
-            endif;
-            //如果图片格式不为.gif或者.jpg，直接退出
-            $name = date("dMYHis") . $ext;
-            //用天月面时分秒来命名新的文件名
+        if(empty($_FILES['file'])){
+            die('we need file!');
         }
-        ob_start();//打开输出
-        readfile($url);//输出图片文件
-        $img = ob_get_contents();//得到浏览器输出
-        ob_end_clean();//清除输出并关闭
-        $size = strlen($img);//得到图片大小
-        $fp2 = @fopen($name, "a");
-        fwrite($fp2, $img);//向当前目录写入图片文件，并重新命名
-        fclose($fp2);
-
         
-        return ['name'=>$name];//返回新的文件名
+        $file = $_FILES['file'];//得到传输的数据
+        //得到文件名称 
+        $name = $file['name'];
+        $type = strtolower(substr($name,strrpos($name,'.')+1)); //得到文件类型，并且都转化成小写
+        $allow_type = array('jpg','jpeg','gif','png'); //定义允许上传的类型
+        //判断文件类型是否被允许上传
+        if(!in_array($type, $allow_type)){
+            //如果不被允许，则直接停止程序运行
+            return ;
+        }
+        //判断是否是通过HTTP POST上传的
+        if(!is_uploaded_file($file['tmp_name'])){
+            //如果不是通过HTTP POST上传的
+            return ;
+        }
+        if($type){
+            
+        }
+        $upload_path = $this->input['path'].'/'; //上传图片的存放路径  
+        //开始移动文件到相应的文件夹
+        if(move_uploaded_file($file['tmp_name'],PIC_PATH.$upload_path.$file['name'])){
+            
+            $this->load->MysqlDB('mysql0');
+            
+            $this->mysql0->update([
+                'table'=>'t_user',
+                'data'=>['logo'=>$upload_path.$file['name']],
+                'where'=>"AND openid = '".$this->input['openid']."'",
+            ]);
+            
+            $return = [
+                'info'=> ['pic'=>$upload_path.$file['name']],
+            ];
+            $out = [
+                'code'=>'200',
+                'msg'=>'success',
+                'data'=>$return,
+            ];
+            
+            ajaxJson($out);
+            
+        }else{
+            echo "Failed!";
+        }
     }
     
-    public function picUpload(){
-        
-        
-        $this->mysql0->insert([
-            'table'=>'t_user_contact',
-            'data'=>$data,
-            'is_return_id'=>true,
-        ]);
-        
-        $img = GrabImage("http://imgsrc.baidu.com/baike/abpic/item/6648d73db0edd1e89f3d62f7.jpg", "");
-        if ($img):echo '<pre>< img src="' . $img . '"></pre>';
-        
-        //如果返回值为真，这显示已经采集到服务器上的图片
-        else:echo "false";
-        endif;
-    }
+    
 }

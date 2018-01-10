@@ -3,8 +3,6 @@
 class Act extends Ctl{
 	
 	
-        
-	
 	/* 从mysql获得数据 */
 	public function select(){
 	    
@@ -29,51 +27,60 @@ class Act extends Ctl{
 	    
 	    ajaxJson($out);
 	}
-
-	public function insert(){
+	
+	/* 从mysql获得数据 */
+	public function selectOne(){
 	    
-            $this->load->mysqlDB('mysql0');
+	    $this->load->mysqlDB('mysql0');
+	    
+	    $id = $this->input['id'];
+	    $data = $this->mysql0-> getOne(array(
+	        
+	        'table'=>'t_act',
+	        'field'=>'*',
+	        'where'=>"AND id=$id"
+	    ));
+	    
+	    if($this->input['group_id']){
+	        $group_id = $this->input['group_id'];
+	        $user_data_one_group= $this->mysql0-> getAll(array(
+	            
+	            'table'=>'t_act_user',
+	            'field'=>'*',
+	            'where'=>"AND act_id=$id AND group_id=$group_id"
+	        ));
+	    }
+	    
+	    $out = array(
+	        'code'  =>'200',
+	        'msg'=>"成功",
+	        'data'=>[
+	            'info'=>$data,
+	            'user_data_one_group'=>['list'=>$user_data_one_group],
+	        ]
+	    );
+	    
+	    ajaxJson($out);
+	}
+	
+	
+	public function insertOne(){
+	    
+        $this->load->mysqlDB('mysql0');
 	    
 	    $data = $this->input['_DATA'];
-
-	    /* 测试数据
-	    $data =  [
-                          'type'=>'COMMON', // '类型【common普通；poster海报】',
-                          'degree_type' =>'3*3',// '拼图难度',
-                          'pay_total' =>20,// '发起人支付金额',
-                          'pay_fee' =>1,//'发起人支付费用',
-                          'award_first' =>2,// '冠军奖励',
-                          'award_two' =>2,//'亚军奖励',
-                          'award_third' =>2,//'季军奖励',
-                          'award_all' =>1,// '参与奖励',
-                          'num_group' =>2,// '参与组数',
-                          'num_person' =>20,// '参与人数',
-                          'add_time' =>1111,// '添加时间（时间戳）',
-                          'end_time' =>22222222222222,// '结束时间',
-                          'limit_sex' =>1,// '限制性别【1男，2女】',
-                          'limit_distance'=>1000,//'限制距离【单位米】',
-	                      'pic'=>'http://dfdj.com/edf.png',
-	    ];*/
-	    
 	   
         $this->mysql0->begin();
- 
-        //插入活动图片 
-	    $this->mysql0->insert([
-	        'table'=>'t_act_pic',
-	        'data'=>[
-	            'pic'=>$data['pic']
-	        ],
-	    ]);
-	    unset($data['pic']);
 	    
+        $data['add_time'] = time();
+        $data['end_time'] = 3600*3 + time();
+        
 	    //插入活动
         $return = $this->mysql0->insert([
             'table'=>'t_act',
             'data'=>$data,
 	        'is_return_id'=>true,
         ]);
-
 
 	    //插入活动分组
         for($i=0; $i<$data['num_group']; $i++){
@@ -127,5 +134,6 @@ class Act extends Ctl{
 	    ];
 	    
 	    ajaxJson($out);
-	}	
+	}
+	
 }
