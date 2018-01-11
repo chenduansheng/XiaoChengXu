@@ -44,7 +44,7 @@ Page({
     posterH: 0,           // 海报高
     posterW2: 0,           // 适应切图的海报宽
     posterH2: 0,           // 适应切图的海报高
-    privateInfo:''        // openId等信息
+    privateInfo:'',        // openId等信息
   },
   onLoad: function () {
     that = this;
@@ -52,8 +52,8 @@ Page({
     //console.log("缓存code:"+code);
     console.log(app.globalData);
     let canvasHeight = that.data.winHeight - 50;
-    canvasMarginL = ((that.data.winWidth - 270) / 2).toFixed(2);
-    canvasMarginT = ((canvasHeight - 270) / 2).toFixed(2);
+    canvasMarginL = ((that.data.winWidth - 310) / 2).toFixed(2);
+    canvasMarginT = ((canvasHeight - 310) / 2).toFixed(2);
     posterMarginL = parseFloat(canvasMarginL);
     posterMarginT = parseFloat(canvasMarginT);
     that.setData({
@@ -61,10 +61,10 @@ Page({
       showCanvas: false,
       showMemberInfo: false,
       canvasHeight: canvasHeight,
-      canvasMarginL: ((that.data.winWidth-270)/2).toFixed(2),
-      canvasMarginT: ((canvasHeight - 270) / 2).toFixed(2),
-      preX: ((that.data.winWidth - 270) / 2).toFixed(2),
-      preXY: ((canvasHeight - 270) / 2).toFixed(2),
+      canvasMarginL: ((that.data.winWidth-310)/2).toFixed(2),
+      canvasMarginT: ((canvasHeight - 310) / 2).toFixed(2),
+      preX: ((that.data.winWidth - 310) / 2).toFixed(2),
+      preXY: ((canvasHeight - 310) / 2).toFixed(2),
     })
     if (app.globalData.userInfo) {
       this.setData({
@@ -166,7 +166,7 @@ Page({
     ctx.setGlobalAlpha(1);
     ctx.drawImage(that.data.imgSrc,x,y,w,h);
     ctx.setStrokeStyle("white");
-    ctx.strokeRect(canvasMarginL,canvasMarginT,270,270);
+    ctx.strokeRect(canvasMarginL,canvasMarginT,310,310);
     ctx.draw();
   },
   getImgInfo:function(src){
@@ -175,8 +175,8 @@ Page({
       success:function(res){
         let imgW = res.width;       // 原海报宽
         let imgH = res.height;      // 原海报高
-        if(imgW < 270 || imgH < 270){
-          common.showErrorTip("宽高至少270px");
+        if(imgW < 310 || imgH < 310){
+          common.showErrorTip("宽高至少310px");
           that.setData({
             showHome: true,
             showCanvas: false,
@@ -188,7 +188,7 @@ Page({
             imgSrc: src
           }) 
           let shortSide = imgW > imgH ? imgH : imgW;
-          let ImgRatio = shortSide / 270;
+          let ImgRatio = shortSide / 310;
           let imgW2 = imgW / ImgRatio;
           let imgH2 = imgH / ImgRatio;
           // 海报首次出现的位置
@@ -211,8 +211,8 @@ Page({
       canvasId: that.data.canvasId,
       x: canvasMarginL+2,
       y: canvasMarginT+2,
-      width:300-4,
-      height:300-4,
+      width:310-4,
+      height:310-4,
       quality:1,
       success:function(res){
         console.log(res);
@@ -389,14 +389,14 @@ Page({
       if(preMoveX){
         posterMarginL += moveW;
         if(curMoveX > preMoveX){ // 右移
-          // 移动后的海报右侧 <=  canvasMarginL+270，按移动位置draw，否则draw海报最右端 
+          // 移动后的海报右侧 <=  canvasMarginL+310，按移动位置draw，否则draw海报最右端 
           if (posterMarginL >= canvasMarginL){   // 海报移至最右边
             posterMarginL = canvasMarginL;
           }
           that.drawImg(posterMarginL, canvasMarginT, posterW2, posterH2);
         } else { // 左移
-          if (posterMarginL + posterW2 <= canvasMarginL + 270) {   // 海报移至最左边
-            posterMarginL = canvasMarginL + 270 - posterW2;
+          if (posterMarginL + posterW2 <= canvasMarginL + 310) {   // 海报移至最左边
+            posterMarginL = canvasMarginL + 310 - posterW2;
           }
           that.drawImg(posterMarginL, canvasMarginT, posterW2, posterH2);
         }
@@ -410,8 +410,8 @@ Page({
           }
           that.drawImg(canvasMarginL, posterMarginT, posterW2, posterH2);
         } else { // 上移
-          if (posterMarginT + posterH2 <= canvasMarginT + 270) {   // 边界限制,海报移至最上边
-            posterMarginT = canvasMarginT + 270 - posterH2;
+          if (posterMarginT + posterH2 <= canvasMarginT + 310) {   // 边界限制,海报移至最上边
+            posterMarginT = canvasMarginT + 310 - posterH2;
           }
 
           that.drawImg(canvasMarginL, posterMarginT, posterW2, posterH2);

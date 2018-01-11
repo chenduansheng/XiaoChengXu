@@ -24,7 +24,8 @@ Page({
     curGroup: [],   // 当前组信息
     hasMe: '',     // 是否已拼过该海报
     canvasId: 'myCanvas',
-    imgDir:''
+    imgDir:'',
+    showSuccessModal: true
   },
   onLoad: function (options) {
     that = this;
@@ -32,7 +33,7 @@ Page({
     let gid = options.gid;
     that.setData({
       imgDir: app.globalData.imgDir,
-      aid: aid ? aid : 3,
+      aid: aid ? aid : 31,
       gid: gid ? gid : ''
     })
     wx.showShareMenu({
@@ -106,7 +107,7 @@ Page({
     let ainfo = that.data.ainfo;
     if (that.data.curGroup.is_finish){         // 1代表活动结束
       common.showErrorTip("此拼图活动结束");
-      return false;
+      //return false;
     }
     if (that.data.hasMe) {
       common.showErrorTip("此拼图您已玩过");
@@ -150,7 +151,9 @@ Page({
     
   },
   viewPuzzle:function(){
-    that.randomPics();
+    that.randomPics();    
+  },
+  startAddTime:function(){
     that.setData({ showPuzzle: true });
     var time = 0;
     intervalUseTime = setInterval(function () {
@@ -268,39 +271,29 @@ Page({
       })
     }
   },
-  randomPics: function () {
-    // var arrPic0 = that.data.arrPic0;
-    var arrPic = arrPic0.concat();
-    arrPic = arrPic.sort(function () {
-      return (0.5 - Math.random());
+  randomPics: function () {    
+    var flag = false;   // 记录是否打散
+    var arrPic = [];
+    wx.showLoading({
+      title: '加载中...',
     })
-    
-    // var flag = true;
-    // for (let [index, elem] of arrPic.entries()) {   // 如果未打乱，则再打乱一次
-    //   if (elem != arrPic0[index]) {
-    //     flag = false;
-    //   }
-    // }
-    // if(flag){
-    //   console.log("相同，继续打乱...")
-    //   arrPic = arrPic.sort(function () {
-    //     return (0.5 - Math.random());
-    //   })
-    //   setTimeout(function(){
-    //     that.setData({
-    //       arrPic: arrPic
-    //     })
-    //   },300)
-    // }else{
-      
-      setTimeout(function(){
+    let intervalArr = setInterval(function(){
+      arrPic = arrPic0.concat();
+      arrPic = arrPic.sort(function () {
+        console.log("打散中...");
+        flag = true;
+        return (0.5 - Math.random());
+      })
+      if (flag){
         that.setData({
           arrPic: arrPic
         })
-      },500)
-
-    // }
-
+        that.startAddTime();
+        clearInterval(intervalArr);
+        console.log("打散成功...");
+        wx.hideLoading();
+      }
+    },200);
     
   },
   canvas: function () {
@@ -415,5 +408,21 @@ Page({
     wx.makePhoneCall({
       phoneNumber: that.data.ainfo.user_info.mobile.toString(),
     })
+  },
+  priviewImg:function(e){
+    let curIndex = e.currentTarget.dataset.index;
+    let curSrc = e.currentTarget.dataset.src;
+    wx.previewImage({
+      urls: [curSrc],
+      success:function(res){
+
+      },
+      fail:function(res){
+        console.log(res);
+      }
+    })
+  },
+  closeSuccessModal: function () {
+    that.setData({ showSuccessModal: false })
   }
 })

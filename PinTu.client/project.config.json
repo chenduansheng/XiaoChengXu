@@ -65,6 +65,30 @@
 					"name": "开始拼图&结果排名",
 					"pathName": "pages/beginPuzzles/beginPuzzles",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "投诉",
+					"pathName": "pages/complain/complain",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的拼图",
+					"pathName": "pages/myPuzzles/myPuzzles",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "余额提现",
+					"pathName": "pages/balance/balance",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的信息",
+					"pathName": "pages/myInfo/myInfo",
+					"query": ""
 				}
 			]
 		}

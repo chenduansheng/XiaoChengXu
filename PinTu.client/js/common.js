@@ -91,6 +91,7 @@ function uploadFile(page,submitName,imgSrc,params){
       page.onUpload("success", res, submitName);
     },
     fail: function (res) {
+      console.log(res);
       page.onUpload("fail", res, submitName);
     }
   })

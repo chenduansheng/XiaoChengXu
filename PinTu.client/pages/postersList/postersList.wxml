@@ -1,15 +1,23 @@
 <!--pages/postersList/postersList.wxml-->
 <view class="container f14 oh">
-  <view class="tc p15-0 b f16 ls2">拼海报赢赏金</view>
+  <!-- <view class="tc p15-0 b f16 ls2">拼海报赢赏金</view> -->
   <scroll-view class="f scroll" scroll-y="true" bindscrolltolower="scrollToBottom">
-    <block wx:for="{{arrPoster}}">
-      <view class="W5 bbox pl10 pt10 pr10 pb5 {{index>1?'mt15':''}}" bindtap="urlTarget" data-url="beginPuzzles" data-id="{{item.id}}">
-         <image class="W" mode="widthFix" src="{{imgDir+item.pic}}"></image> 
-        <view class="tc h25 lh25 ell F_ jcc c3 f12">
-          <image class="w25 h25 r mr10" src="{{userInfo.avatarUrl}}"></image>
-          {{userInfo.nickName}}
+    <block wx:if="{{arrPoster.length>0}}">
+      <block wx:for="{{arrPoster}}">
+        <view class="W5 bbox pl10 pt10 pr10 pb5 {{index>1?'mt15':''}}" bindtap="urlTarget" data-url="beginPuzzles" data-id="{{item.id}}">
+          <image class="W" mode="widthFix" src="{{imgDir+item.pic}}"></image> 
+          <view class="tc h25 lh25 ell F_ jcc c3 f12">
+            <image class="w25 h25 r mr10" src="{{userInfo.avatarUrl}}"></image>
+            {{userInfo.nickName}}
+          </view>
         </view>
+      </block>
+    </block>
+    <block wx:else>
+      <view class="F">
+        <view class='tc c7 mt040'>暂无海报</view>
       </view>
     </block>
+    
   </scroll-view>
 </view>

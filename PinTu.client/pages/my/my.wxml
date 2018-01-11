@@ -10,14 +10,14 @@
     </view>
   </view>
   <scroll-view class="f bge f14 c3">
-    <view class="bgf p0-10">
+    <view class="bgf p0-10" bindtap="urlTarget" data-url="myPuzzles" data-type='0'>
       <view class="bbe p10-0 F_">
         <icon class="iconfont icon-manage f24"></icon>
         <text class="f ell pl5">已发拼图</text>
         <icon class="iconfont icon-enter pl10 c7 lh30 f18"></icon>
       </view>      
     </view>
-    <view class="bgf p0-10">
+    <view class="bgf p0-10"  bindtap="urlTarget" data-url="myPuzzles" data-type='1'>
       <view class="bbe p10-0 F_">
         <icon class="iconfont icon-tools f24"></icon>
         <text class="f ell pl5">参与拼图</text>
@@ -25,16 +25,16 @@
       </view>      
     </view>
 
-    <view class="bgf p0-10 mt10 mb10">
+    <view class="bgf p0-10 mt10 mb10" bindtap="urlTarget" data-url="balance">
       <view class="bbe p10-0 F_">
         <icon class="iconfont icon-redpacket f24"></icon>
-        <text class="f ell pl5">余额</text>
+        <text class="f ell pl5">余额提现</text>
         <text>￥{{balance}}</text>
         <icon class="iconfont icon-enter pl10 c7 lh30 f18"></icon>
       </view>      
     </view>
 
-    <view class="bgf p0-10">
+    <view class="bgf p0-10" bindtap="urlTarget" data-url="myInfo">
       <view class="bbe p10-0 F_">
         <icon class="iconfont icon-addressbook f24"></icon>
         <text class="f ell pl5">我的信息</text>

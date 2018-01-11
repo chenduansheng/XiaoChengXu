@@ -1,0 +1,51 @@
+<!--pages/myPuzzles/myPuzzles.wxml-->
+<view class='container W bgf f14'>
+  <view class='F_ h40 lh40 tc c9 b bgf bbe'>
+    <view class="tab-item {{currentTab==0?'active':''}} f" data-current="0" bindtap="switchNav">我发出的</view>
+    <view class="tab-item {{currentTab==1?'active':''}} f" data-current="1" bindtap="switchNav">我参与的</view>
+  </view>
+  <!-- <swiper class="f bgmain F W bge" current="{{currentTab}}" bindchange="switchTab"> -->
+    <!-- <swiper-item class="F" wx:for="{{[0,1]}}"> -->
+      <!-- <block wx:if="{{currentTab==0}}"> -->
+        <scroll-view class='H F' scroll-y="true" bindscrolltolower="scrollToBottom">
+          <view class="pt20 pb20 bbox F_ jcc bge">
+            <image class="w50 h50 r bgc" src="{{userInfo.avatarUr?userInfo.avatarUr:'../../image/head.png'}}"></image>
+            <view class="W tc mt10">{{userInfo.nickName}}共发出</view>
+            <view class='F_ f12 c9 tc mt20'>
+              <view class="f">金额(元)</view>
+              <view class="f">数量(个)</view>
+            </view>
+            <view class='F_ f18 tc b mt5'>
+              <view class="f">18.89</view>
+              <view class="f">11</view>
+            </view>
+
+          </view>
+          <view class="f bgf p0-10 bbox">
+            <block wx:for="0000000000000">
+              <view class="bbe p5-0">
+                <view class="F_ h20">
+                  <view class="f c3">你能拼出来我就服</view>
+                  <view class="pl10 b">1.00元</view>
+                </view>
+                <view class="F_ h20 f12">
+                  <view class="f c7">1月11日 16：37</view>
+                  <view class="pl10">1/1</view>
+                </view>
+
+
+              </view>
+            </block>
+          
+          </view>
+        </scroll-view>
+      <!-- </block> -->
+
+      <!-- <block wx:if="{{currentTab==1}}">
+        <scroll-view class='H' scroll-y="true" bindscrolltolower="scrollToBottom">
+          我收到的
+        </scroll-view>
+      </block>
+    </swiper-item>
+  </swiper> -->
+</view>

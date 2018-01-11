@@ -32,12 +32,10 @@ select::-ms-expand { display: none; }
 .t{display:table-cell;vertical-align:middle}
 .tt{display:table-cell;vertical-align:top}
 
-/*阴影*/
 .bs0{-moz-box-shadow: 0px 0px 5px #ddd; box-shadow: 0px 0px 5px #ddd;}
 .bsi0{-moz-box-shadow: 0px 0px 5px #009688 inset; box-shadow: 0px 0px 5px #009688 inset;}
 .bsif{-moz-box-shadow: 0px 0px 5px #fff inset; box-shadow: 0px 0px 5px #fff inset;}
 
-/* box--flexbox--flex */
 .flex,.F,.F_{display:-webkit-box; display:-moz-box; display:-webkit-flex; display:-moz-flex; display:-ms-flexbox; display:flex}
 .F{height:100%; -moz-box-orient:vertical; -webkit-box-orient:vertical; box-orient:vertical; flex-direction:column }
 .F_{width:100%;flex-direction:row;justify-content:space-between;align-items:center;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}
@@ -135,7 +133,7 @@ select::-ms-expand { display: none; }
 
 /* 本项目：透明背景色 */
 .bgopacity{background: rgba(0, 0, 0, 0.4)}
-.bgopacity8{background: rgba(0, 0, 0, 0.8)}
+.bgopacity9{background: rgba(0, 0, 0, 0.9)}
 .bgopacity2{background: rgba(255, 255, 255, 0.8)}
 .bgopacity3{background: rgba(255, 255, 255, 0.3)}
 

@@ -53,6 +53,16 @@ Page({
   onShareAppMessage: function () {
   
   },
+  urlTarget: function (event) {
+    const url_name = event.currentTarget.dataset.url;    
+    var params = "";
+    if (url_name == "myPuzzles"){
+      const curType = event.currentTarget.dataset.type;
+      params = "?type=" + curType;
+
+    }
+    common.urlTarget(url_name,"",params);
+  },
   onSuccess: function (methodName, res) {
     if (res.statusCode == 200) {
       let ret = res.data;

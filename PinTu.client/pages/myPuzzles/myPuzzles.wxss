@@ -1,0 +1,14 @@
+/* pages/myPuzzles/myPuzzles.wxss */
+.tab-item.active{
+   color: #FF0036;
+   position: relative;
+   } 
+ .tab-item.active:after{
+   content: "";
+   display: block;
+   height: 3rpx;
+   width: 30%;
+   left: 35%;
+   background: #FF0036;
+   position: relative;
+} 

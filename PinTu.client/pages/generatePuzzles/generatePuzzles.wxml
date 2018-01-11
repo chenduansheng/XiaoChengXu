@@ -1,7 +1,7 @@
 <!--pages/generatePuzzles/generatePuzzles.wxml-->
 <view class='container oh bge c3 f14'>
   <scroll-view class="scroll bbox" scroll-y="">
-  <image class='W' src='{{poster}}' mode="widthFix"></image>
+   <!-- <image class='W' src='{{poster}}' mode="widthFix"></image>  -->
     <view class='h10'></view>
     <view class="c0 r2 m0-10 p0-10 bbox f12">
       <view class="F_ bby h35 lh35 dn">

@@ -24,8 +24,6 @@ Page({
   onShow: function () {
     that.setData({ avatar: app.globalData.userInfo?app.globalData.userInfo.avatarUrl:'../../image/2018.jpg'})
     let _DATA = {
-      // scene: "aid=" + that.data.aid,
-      // page:"pages/share/share",
       path: "pages/share/share?aid=" + that.data.aid
     }
     let params = {
@@ -42,8 +40,7 @@ Page({
     return{
       title:"share海报拼图",
       path:"/pages/share?aid="+that.data.aid, 
-      // imageUrl:"http://xcx.s1.welcomest.com/pintu/images/act/poster/wx3d00770652053edd.o6zAJs9bs--3Qn1Jkc_lFPynmD4A.e756eb43cc22c1f2e0c4c63623777dd5.png",
-      success:function(res){              // 转发成功
+      success:function(res){
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
           success: function (res) {       // 将encryptedData、iv传给后台解密=>获取群id

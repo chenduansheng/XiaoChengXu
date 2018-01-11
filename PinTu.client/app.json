@@ -7,7 +7,11 @@
     "pages/generatePuzzles/generatePuzzles",
     "pages/share/share",
     "pages/ranking/ranking",
-    "pages/beginPuzzles/beginPuzzles"
+    "pages/beginPuzzles/beginPuzzles",
+    "pages/complain/complain",
+    "pages/myPuzzles/myPuzzles",
+    "pages/balance/balance",
+    "pages/myInfo/myInfo"
   ],
   "window":{
     "backgroundTextStyle":"light",
