@@ -1,7 +1,34 @@
 <?php
+
+$t = json_encode($_FILES);
+$time = date('Y-m-d H:i:s',time());
+$get = json_encode($_GET);
+$req = json_encode($_REQUEST);
+logger('1111111111111----run in----'.$time.'+++files'.$t.'+++get'.$get.'+++request'.$req);
+
+
+//日志记录
+function logger($log_content)
+{
+    //$max_size = 100000;
+    //$log_filename = "log.xml";
+    //if(file_exists($log_filename) and (abs(filesize($log_filename)) > $max_size)){unlink($log_filename);}
+
+    error_log($log_content.'---'.PHP_EOL, 3, 'Application/Runtime/Logs/apple'.date('Y-m-d').'.log');
+}
+
+
+
+
+
+
 /* openid */
 if(empty($_REQUEST['openid']) && $_REQUEST['_A']!='getWxId'){
     die('we need openid');
+}
+/* 参数验证 */
+if(empty($_REQUEST['_A']) || empty($_REQUEST['_A'])){
+    die('we need _A and _C!');
 }
 
 /***************

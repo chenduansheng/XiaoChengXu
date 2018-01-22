@@ -328,7 +328,7 @@ class MysqlPDO {
 		$array = array_merge(array('table'=>''),$array);
 		
 		if(!is_array($array['data'])){
-		    print_r($array);;exit;
+		    print_r($array);
 			die('data必须是数组！');
 		}
 		if(!$array['table']){
@@ -374,6 +374,12 @@ class MysqlPDO {
 		}
 		$sql = "UPDATE {$array['table']} SET ";
 		$sql .= implode(",",$set);
+		if(!empty($array['data_str'])){
+			if($set){
+				$sql .= ',';
+			}
+			$sql .= $array['data_str'];
+		}
 		$sql .= " WHERE 1 ".$array['where'];
 		
 		addLog(array('file_name'=>'sqlUpdate','content'=>$sql));

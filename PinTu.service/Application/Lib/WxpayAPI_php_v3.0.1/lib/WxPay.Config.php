@@ -2,9 +2,13 @@
 /**
 * 	配置账号信息
 */
-
+session_start();
+$_SESSION['q'] = $GLOBALS['CURRENT_KEY']['TENCENT']['WX_XCX'];
+//print_r($GLOBALS['CURRENT_KEY']['TENCENT']['WX_XCX']);exit;
 class WxPayConfig
 {
+
+
 	//=======【基本信息设置】=====================================
 	//
 	/**
@@ -22,11 +26,36 @@ class WxPayConfig
 	 * 获取地址：https://mp.weixin.qq.com/advanced/advanced?action=dev&t=advanced/dev&token=2005451881&lang=zh_CN
 	 * @var string
 	 */
+
+function __construct(){
+//    print_r($GLOBALS);exit;	
+}
+
+
+
+
+/*KEY san
 	const APPID = 'wx3d00770652053edd';
 	const MCHID = '1418910502';
 	const KEY = 't9RRtRNYJkL2Dfe6CwiKO27f128AsERs';
 	const APPSECRET = 'e51701c63f8f80a4a715f15282eb925e';
-	
+*/
+
+/*KEY2*/
+        const APPID = 'wxd727ee9e47b2faa6';
+        const MCHID = '1445950302';
+        const KEY = 'yJAwHgu1wzaDLcz1iS3pg0hZBLTldKoS';
+        const APPSECRET = '9c98fabf2d3301d83fd1452299ced66f';
+
+
+/*
+//global $GLOBALS;
+	const CONF = $_SESSION['q'];//$GLOBALS['q'];//$GLOBALS['CURRENT_KEY']['TENCENT']['WX_XCX'];
+	const APPID = CONF['appid'];
+	const MCHID = CONF['mchid'];
+	const KEY = CONF['key'];
+	const APPSECRET = CONF['secret'];
+*/	
 	//=======【证书路径设置】=====================================
 	/**
 	 * TODO：设置商户证书路径
@@ -34,9 +63,13 @@ class WxPayConfig
 	 * API证书下载地址：https://pay.weixin.qq.com/index.php/account/api_cert，下载之前需要安装商户操作证书）
 	 * @var path
 	 */
-	const SSLCERT_PATH = '../cert/apiclient_cert.pem';
-	const SSLKEY_PATH = '../cert/apiclient_key.pem';
+
+	//const SSLCERT_PATH = '../cert/apiclient_cert.pem';
+	//const SSLKEY_PATH = '../cert/apiclient_key.pem';
 	
+/*	const SSLCERT_PATH = CONF['cert_cert_file'];
+	const SSLKEY_PATH = CONF['cert_key_file'];
+*/	
 	//=======【curl代理设置】===================================
 	/**
 	 * TODO：这里设置代理机器，只有需要代理的时候才设置，不需要代理，请设置为0.0.0.0和0

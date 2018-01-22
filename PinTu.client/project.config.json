@@ -9,18 +9,14 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "1.7.2",
-	"appid": "wxd727ee9e47b2faa6",
-	"projectname": "%E6%8B%BC%E5%9B%BEnew",
+	"appid": "wx3d00770652053edd",
+	"projectname": "PinTu_v0.0.1",
 	"condition": {
 		"search": {
 			"current": -1,
 			"list": []
 		},
 		"conversation": {
-			"current": -1,
-			"list": []
-		},
-		"game": {
 			"current": -1,
 			"list": []
 		},
@@ -63,48 +59,6 @@
 					"pathName": "pages/share/share",
 					"query": "",
 					"scene": "1044"
-				},
-				{
-					"id": -1,
-					"name": "开始拼图&结果排名",
-					"pathName": "pages/beginPuzzles/beginPuzzles",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "投诉",
-					"pathName": "pages/complain/complain",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "我的拼图",
-					"pathName": "pages/myPuzzles/myPuzzles",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "余额提现",
-					"pathName": "pages/balance/balance",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "我的信息",
-					"pathName": "pages/myInfo/myInfo",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "test",
-					"pathName": "pages/test/test",
-					"query": ""
-				},
-				{
-					"id": -1,
-					"name": "test",
-					"pathName": "pages/test/test",
-					"query": ""
 				}
 			]
 		}

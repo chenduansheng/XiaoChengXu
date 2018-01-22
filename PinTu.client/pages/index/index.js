@@ -3,16 +3,10 @@
 const app = getApp();
 const common = require("../../js/common.js");
 var that = '';
-var canvasMarginL = 0;      // 中间截图canvas的左边距
-var canvasMarginT = 0;
-var preMoveX = 0;
-var preMoveY = 0;
-var posterMarginL = 0;      // 计算海报移动后的左边距
-var posterMarginT = 0;
 Page({
   data: {
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    userInfo: '',
+    userInfo: {},
     hasUserInfo: false,
     hasImg:false,
     hasMember:false,
@@ -22,7 +16,7 @@ Page({
     winHeight: app.globalData.phoneInfo.windowHeight,
     canvasHeight:0,
     canvasId:'mycanvas',
-    radioInfo:'SHOW',
+    radioInfo:'open',
     radioSex:'all',
     inputWx:'',
     inputName:'',
@@ -30,7 +24,6 @@ Page({
     inputAddress:'',
     inputCoordinate:'',
     inputDiffDistance:'',
-    inputDeclaration:'',
     showMemberInfo: false,
     showCanvas:false,
     showHome:true,
@@ -42,30 +35,30 @@ Page({
     canvasMarginT: 0,     // 子画布上边距
     posterW:0,            // 海报宽
     posterH: 0,           // 海报高
-    posterW2: 0,           // 适应切图的海报宽
-    posterH2: 0,           // 适应切图的海报高
-    privateInfo:'',        // openId等信息
+    privateInfo:''        // openId等信息
   },
   onLoad: function () {
     that = this;
-    //let code = wx.getStorageSync("code");
+    let code = wx.getStorageSync("code");
     //console.log("缓存code:"+code);
     console.log(app.globalData);
     let canvasHeight = that.data.winHeight - 50;
-    canvasMarginL = ((that.data.winWidth - 310) / 2).toFixed(2);
-    canvasMarginT = ((canvasHeight - 310) / 2).toFixed(2);
-    posterMarginL = parseFloat(canvasMarginL);
-    posterMarginT = parseFloat(canvasMarginT);
     that.setData({
       showHome: true,
       showCanvas: false,
       showMemberInfo: false,
       canvasHeight: canvasHeight,
-      canvasMarginL: ((that.data.winWidth-310)/2).toFixed(2),
-      canvasMarginT: ((canvasHeight - 310) / 2).toFixed(2),
-      preX: ((that.data.winWidth - 310) / 2).toFixed(2),
-      preXY: ((canvasHeight - 310) / 2).toFixed(2),
+      canvasMarginL: ((that.data.winWidth-270)/2).toFixed(2),
+      canvasMarginT: ((canvasHeight - 270) / 2).toFixed(2),
+      preX: ((that.data.winWidth - 270) / 2).toFixed(2),
+      preXY: ((canvasHeight - 270) / 2).toFixed(2),
     })
+    let params = {
+      _C:"Key",
+      _A:"getWxId",
+      code: code
+    }
+    common.request("getSessionKey",that,"form",params);
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -81,35 +74,27 @@ Page({
         })
       }
     } else {
-      that.getUserSetting();
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+        }
+      })
     }
-    
-    that.openScopeMap();
+    // 获取sessionKey
+
   },
   onShow:function(){
-    let privateInfo = wx.getStorageSync("pivateInfo");
-    console.log("缓存privateInfo：");
-    console.log(wx.getStorageSync("pivateInfo"));
-    if (privateInfo.openId) {
-      console.log("有openId，即将获取会员信息");
+    //console.log("窗口宽高：" + that.data.winWidth + "," + that.data.winHeight);
+    //console.log("子画布左、上边距："+that.data.canvasMarginL + "," + that.data.canvasMarginT);
+    if (app.globalData.userInfo && app.globalData.userInfo.openId){
       that.getMemberInfo();
-    }else{
-      console.log("无openId，判断有没有code");      
-      let code = wx.getStorageSync("code");
-      if (code){        
-        let params = {
-          _C: "Key",
-          _A: "getWxId",
-          code: code
-        }
-        common.request("getSessionKey", that, "form", params);
-      } else {// 没有code,即将查看用户授权
-        that.getUserSetting();
-      }      
     }
-    if(!app.globalData.userInfo){
-      that.openScopeUserInfo();
-    }
+    
   },
   getUserInfo: function(e) {      // 获取用户微信信息
     // 判断是否有个人信息
@@ -118,37 +103,37 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+    //console.log("刷新项目");
+    //wx.startPullDownRefresh({})
   },
   urlTarget:function(e){
     common.urlTarget(e.currentTarget.dataset.url);
   },
   addImg:function(){              // 点击选择拼图
-    that.delayAddImg();
+    if (that.data.hasMember){
+      common.showErrorTip("添加图片");
+      that.chooseImg();
+    }else{
+      that.setData({ 
+        showHome: false,
+        showCanvas:false,
+        showMemberInfo: true
+      })
+    }
+    
   },
-  delayAddImg:function(){         // 延迟判断是否有个人信息
-    setTimeout(function(){
-      if (that.data.hasMember) {
-        that.chooseImg();
-      } else {
-        that.setData({
-          showHome: false,
-          showCanvas: false,
-          showMemberInfo: true
-        })
-      } 
-    },300)
-  },
-  chooseImg:function(){   // 选择海报    
+  chooseImg:function(){
+    that.setData({ 
+        showHome: false,
+        showMemberInfo: false,
+        showCanvas: true
+    });
     wx.chooseImage({
       count: 1, 
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
-      success: function (res) { 
-        that.setData({
-          showHome: false,
-          showMemberInfo: false,
-          showCanvas: true
-        });       
+      success: function (res) {
+        
         let tempFilePaths = res.tempFilePaths;
         that.getImgInfo(tempFilePaths[0]);        
       }
@@ -162,10 +147,6 @@ Page({
       showMemberInfo: false,
       showCanvas: false
     })
-    preMoveX = 0;
-    preMoveY = 0;
-    posterMarginL = parseFloat(that.data.canvasMarginL);      // 计算海报移动后的左边距
-    posterMarginT = parseFloat(that.data.canvasMarginT);
   },
   cancel:function(){
     that.delImg();
@@ -175,20 +156,17 @@ Page({
   },
   drawImg:function(x,y,w,h){
     let ctx = wx.createCanvasContext(that.data.canvasId);
+    ctx.beginPath();
     ctx.setGlobalAlpha(1);
     ctx.drawImage(that.data.imgSrc,x,y,w,h);
-    ctx.setStrokeStyle("white");
-    ctx.strokeRect(canvasMarginL,canvasMarginT,310,310);
-    ctx.draw();
+    ctx.draw();    
   },
   getImgInfo:function(src){
     wx.getImageInfo({
       src: src,
       success:function(res){
-        let imgW = res.width;       // 原海报宽
-        let imgH = res.height;      // 原海报高
-        if(imgW < 310 || imgH < 310){
-          common.showErrorTip("宽高至少310px");
+        if(res.width < 270 || res.height < 270){
+          common.showErrorTip("图片过小");
           that.setData({
             showHome: true,
             showCanvas: false,
@@ -198,22 +176,16 @@ Page({
           that.setData({
             hasImg: true,
             imgSrc: src
-          }) 
-          let shortSide = imgW > imgH ? imgH : imgW;
-          let ImgRatio = shortSide / 310;
-          let imgW2 = imgW / ImgRatio;
-          let imgH2 = imgH / ImgRatio;
+          })   
           // 海报首次出现的位置
           that.setData({
-            posterW: imgW,
-            posterH: imgH,
-            posterW2: imgW2,
-            posterH2: imgH2,
+            posterW: res.width,
+            posterH: res.height,
             showHome: false,
             showMemberInfo: false,
             showCanvas: true
           })          
-          that.drawImg(canvasMarginL - 0, canvasMarginT - 0, imgW2, imgH2);
+          //that.drawImg(that.data.canvasMarginL, that.data.canvasMarginT, res.width, res.height);
         }
       }
     })
@@ -221,19 +193,16 @@ Page({
   exportImg:function(){
     wx.canvasToTempFilePath({
       canvasId: that.data.canvasId,
-      x: canvasMarginL+2,
-      y: canvasMarginT+2,
-      width:310-4,
-      height:310-4,
-      quality:1,
+      x:35,
+      y:100,
+      width:270,
+      height:167,
+      destWidth: 270,
+      destHeight: 117,
       success:function(res){
         console.log(res);
-        that.setData({ 
-          imgSrc: res.tempFilePath          
-        });
-        //common.showSuccessTip("图片裁剪成功");
-        that.delImg();
-        common.urlTarget("generatePuzzles", "", "?poster=" + res.tempFilePath);
+        that.setData({ imgSrc: res.tempFilePath});
+        common.showSuccessTip("图片裁剪成功");
       },
       fail:function(err){
         console.log(err);
@@ -249,7 +218,8 @@ Page({
   getMemberInfo:function(openId){
     let params = {
       _C: 'User',
-      _A: 'selectOne'
+      _A: 'selectContact',
+      openid: openId ? openId : that.data.privateInfo.openId
     }
     common.request("getMemberInfo", that, "form", params);
   },
@@ -262,15 +232,15 @@ Page({
     let inputAddress = that.data.mapInfo ? that.data.mapInfo.address : '';
     let inputCoordinate = that.data.inputCoordinate;
     let inputDiffDistance = that.data.inputDiffDistance;
-    let inputDeclaration = that.data.inputDeclaration;
-    flag = common.verifyNull(inputWx,"微信号");
-    flag && (flag = common.verifyNull(inputName,"联系人"));
-    flag && (flag = common.verifyTel(inputTel));
+    //flag = common.verifyNull(inputWx, "微信号");
+    //flag = common.verifyNull(inputName,"联系人");
+    // flag && (flag = common.verifyTel(inputTel));
     // flag && (flag = common.verifyNull(inputAddress,"地址"));
+    flag = true;
     if(flag){
       let params = {
         _C:"User",
-        _A:"updateOne",
+        _A:"updateUser",
         _DATA: JSON.stringify({
           lat: that.data.mapInfo ? that.data.mapInfo.latitude : '',
           lng: that.data.mapInfo ? that.data.mapInfo.longitude : '',
@@ -281,11 +251,9 @@ Page({
           nick_name: that.data.userInfo.nickName,
           wx: inputWx,
           address: inputAddress,
-          //declaration: inputDiffDistance,
           //distance: inputDiffDistance,
           gender: that.data.userInfo.gender,
-          city: that.data.userInfo.city,
-          logo: that.data.logo
+          city: that.data.userInfo.city
         })        
       }
       //common.showErrorTip("提交会员信息");
@@ -312,10 +280,6 @@ Page({
     let curVal = e.detail.value;
     that.setData({ inputDiffDistance: curVal })
   },
-  getDeclaration: function (e) {
-    let curVal = e.detail.value;
-    that.setData({ inputDiffDistance: curVal })
-  },
   onSuccess: function (methodName, res) {
     if (res.statusCode == 200) {
       let ret = res.data;
@@ -324,7 +288,6 @@ Page({
         let info = res.data.data.info ? res.data.data.info : '';
         switch (methodName) {
           case 'getMemberInfo':  // 获取会员信息
-          console.log("会员信息获取成功");
             if(!info){
               that.setData({
                 hasMember: false
@@ -332,7 +295,6 @@ Page({
             }else{
               that.setData({
                 hasMember: true,
-                hasUserInfo:true,
                 memberInfo: info
               })
             }             
@@ -344,18 +306,14 @@ Page({
               showCanvas: false,
               showMemberInfo: false
             })
-            common.showSuccessTip("提交成功");
             break;
           case 'getSessionKey':
-              console.log("openId成功获取---------");
               let params = {
                 sessionKey : info.session_key,
                 openId : info.openid,
                 unionId : info.unionid ? info.unionid : ''
               }
-              if (!info.errcode){
-                wx.setStorageSync("pivateInfo", params);            
-              }              
+              wx.setStorageSync("pivateInfo", params);
               that.getMemberInfo(info.openid);    // 第一次通过openId获取会员信息
             break;
 
@@ -364,6 +322,13 @@ Page({
       } else {
         // 提交会员信息接口有bug
         console.log(res);
+        //common.showErrorTip(ret.msg);
+        // that.setData({    // bug解决这个需要delete
+        //   hasMember: true,
+        //   showHome: true,
+        //   showCanvas: false,
+        //   showMemberInfo: false
+        // })
       }
     } else {
       console.log("接口有问题：" + methodName);
@@ -371,20 +336,6 @@ Page({
   },
   onFail: function (methodName) {
     console.log("接口调用失败：" + methodName);
-    if (methodName == "getSessionKey"){
-      let code = wx.getStorageSync("code");
-      if (code) {
-        let params = {
-          _C: "Key",
-          _A: "getWxId",
-          code: code
-        }
-        common.request("getSessionKey", that, "form", params);
-      } else {// 没有code,即将查看用户授权
-        that.getUserSetting();
-      }  
-
-    }
   },
   onComplete: function (methodName) { 
 
@@ -394,61 +345,43 @@ Page({
     console.log(e);
   },
   touchMove:function(e){
-    that.moveCompute(e);
+    console.log("触摸move：");
+    console.log(e);
+    setTimeout(function(){
+      //that.move(e);
+    },500)
   },
-  touchEnd: function (e) {        // 触摸结束，清空上一次的触摸点
-    preMoveX = 0;
-    preMoveY = 0;
+  touchEnd:function(e){
+    console.log("触摸end：");
+    console.log(e);
   },
-  moveCompute:function(e){    // 海报移动计算
-    canvasMarginL = parseFloat(canvasMarginL);
-    canvasMarginT = parseFloat(canvasMarginT);
-    posterMarginL = parseFloat(posterMarginL);
-    posterMarginT = parseFloat(posterMarginT);
-    let posterW2 = that.data.posterW2;
-    let posterH2 = that.data.posterH2;
-    let curMoveX = e.touches[0].x;
-    let curMoveY = e.touches[0].y;
-    let moveW = curMoveX - preMoveX;
-    let moveH = curMoveY - preMoveY;
-
-    // 如果海报W > 海报H，横向移动；
-    if (posterW2 > posterH2){
-      if(preMoveX){
-        posterMarginL += moveW;
-        if(curMoveX > preMoveX){ // 右移
-          // 移动后的海报右侧 <=  canvasMarginL+310，按移动位置draw，否则draw海报最右端 
-          if (posterMarginL >= canvasMarginL){   // 海报移至最右边
-            posterMarginL = canvasMarginL;
-          }
-          that.drawImg(posterMarginL, canvasMarginT, posterW2, posterH2);
-        } else { // 左移
-          if (posterMarginL + posterW2 <= canvasMarginL + 310) {   // 海报移至最左边
-            posterMarginL = canvasMarginL + 310 - posterW2;
-          }
-          that.drawImg(posterMarginL, canvasMarginT, posterW2, posterH2);
-        }
-      }
-    } else {    // 竖向移动；
-      if(preMoveY){
-        posterMarginT += moveH;
-        if (curMoveY > preMoveY) { // 下移
-          if (posterMarginT >= canvasMarginT) {   // 边界限制,海报移至最下边
-            posterMarginT = canvasMarginT;
-          }
-          that.drawImg(canvasMarginL, posterMarginT, posterW2, posterH2);
-        } else { // 上移
-          if (posterMarginT + posterH2 <= canvasMarginT + 310) {   // 边界限制,海报移至最上边
-            posterMarginT = canvasMarginT + 310 - posterH2;
-          }
-
-          that.drawImg(canvasMarginL, posterMarginT, posterW2, posterH2);
-        }
-
-      }
+  move:function(e){
+    console.log(e);
+    let preX = that.data.preX;
+    let preY = that.data.preY;
+    let curX = e.changedTouches[0].x;
+    let curY = e.changedTouches[0].y;    
+    var moveW = curX - preX;
+    var moveH = curY - preY;
+    //console.log("移动x:"+moveW+",移动y:"+moveH);
+    // 判断图像超出子画布
+    if (curX > that.data.canvasMarginL || curY > that.data.canvasMarginT){  // 固定左上角
+      that.drawImg(that.data.canvasMarginL, that.data.canvasMarginT, that.data.posterW, that.data.posterH);
+      //curX = that.data.canvasMarginL;
+      //curY = that.data.canvasMarginT;
+    // } else if (curX + that.data.posterW < that.data.canvasMarginL || curY + that.data.posterH < curY > that.data.canvasMarginT){   // 固定右下角:海报右下角<子画布右下角
+    //   that.drawImg(270 + canvasMarginL - that.data.posterW, 270 + canvasMarginT - that.data.posterH, that.data.posterW, that.data.posterH);
+    //   curX = 270 + canvasMarginL - that.data.posterW;
+    //   curY = 270 + canvasMarginT - that.data.posterH;
+     }else{
+      that.drawImg(preX + moveW, preY + moveH, that.data.posterW, that.data.posterH);
     }
-    preMoveX = curMoveX;
-    preMoveY = curMoveY;
+    that.setData({
+      preX: curX,
+      preY: curY
+    })
+    console.log("海报坐标的变化：(" + preX + "," + preY + "),==>(" + curX + "," + curY + ")");
+    console.log(e);
   },
   uploadLogo:function(){
     wx.chooseImage({
@@ -456,90 +389,23 @@ Page({
       sizeType: ['original', 'compressed'],
       sourceType: ['album'],
       success: function (res) {
-        let tempFilePaths = res.tempFilePaths;
-        that.setData({ logo: tempFilePaths[0] });
-        let params = {          
-          path: "logo"
-        }
-        common.uploadFile(that, "submitLogo", tempFilePaths[0], params);
+        that.setData({ logo: res.tempFilePaths[0] });
       }
     })    
   },
-  getUserSetting: function () {
-    wx.getSetting({   //查看用户授权列表
-      success: function (res) {
-        let authSettings = res.authSetting;         
-        if (!authSettings['scope.userInfo']){   // 用户未授权个人信息
-          that.openScopeUserInfo();
-        }
-        // 位置未授权
-        if (authSettings['scope.userInfo'] && !authSettings['scope.userLocation']) {   // 用户未授权地图
-          that.openScopeMap();
-        }
+  getMap: function () {
+    wx.getSetting({
+      success: function (res) {    // 地图已授权
+        that.chooseMap();
       }
     })
-  },
-  openScopeUserInfo:function(){     // 开启用户授权
-    wx.getUserInfo({
-      withCredentials: true,  // openid、sessionKey、unionid的获取需要设置此项
-      success: res => {       // 用户授权成功，获取用户信息
-        app.globalData.userInfo = res.userInfo;
-        that.setData({
-          hasUserInfo: true,
-          userInfo: res.userInfo
-        });
-        that.getUserSetting();  // 判断地图授权
-        // 获取oppenid
-        console.log("获取oppenid");
-        let code = wx.getStorageSync("code");
-        let params = {
-          _C: "Key",
-          _A: "getWxId",
-          code: code
-        }        
-        common.request("getSessionKey", that, "form", params);
-
-      },
-      fail:res => {   // 用户仍未授权
-        common.showErrorTip("头像未授权");
-        setTimeout(function(){
-          that.openSetting();     // 打开授权设置引导界面
-        },1500)        
-
-      }
-    })
-  },
-  openScopeMap:function(){    // 开启地图授权
-    wx.getLocation({
-      success: function(res) {
-        console.log("用户当前latitude:" + res.latitude);
-        console.log("用户当前longitude:" + res.longitude);
-      },
-      fail:function(){
-        common.showErrorTip("位置未授权");
-        setTimeout(function(){
-          that.openSetting();
-        },1500)
-      }
-    })
-
-  },
-  openSetting: function () {   // 打开授权设置引导界面
-    wx.openSetting({
-      success: function (res) {       
-        if (res.authSetting['scope.userInfo']) { // 用户授权成功，去获取用户信息
-          that.openScopeUserInfo();
-        }
-
-      }
-    });
   },
   chooseMap:function(){
     wx.chooseLocation({
       success: function (res) {
         that.setData({mapInfo:res});
       },
-      fail:function(err){
+      fail:function(){
         wx.openSetting({
             success:function(res){
               console.log("引导用户授权：");
@@ -548,41 +414,5 @@ Page({
         });
       }
     })
-  },
-  uploadLogoImg:function(){
-    let logo = that.data.logo;
-    let params = {
-      path: "logo"
-    }
-    common.uploadFile(that, "submitLogo", logo, params);
-  },
-  onUpload: function (result, res, submitName) {    
-    if (result == "fail" || res.statusCode == 400){
-      console.log("submitName:" + submitName);
-      console.log(res);
-      if (submitName == "submitLogo"){
-        setTimeout(function(){
-          that.uploadLogoImg();
-        },300)
-      }
-
-    }else{
-      let data = JSON.parse(res.data);
-      if (res.statusCode != 200 || data.code != 200) {
-        common.showErrorTip(submitName + "上传失败");
-        return false;
-      }
-      // 上传成功
-      let info = data.data.info;
-      let pic = app.globalData.imgDir + info.pic;
-      console.log(submitName + "服务器图片地址：" + pic);
-      switch (submitName) {
-        case 'submitLogo':
-
-          break;
-      }
-    }
-    
   }
-  
 })

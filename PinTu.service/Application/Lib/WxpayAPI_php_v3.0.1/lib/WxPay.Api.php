@@ -65,6 +65,142 @@ class WxPayApi
 		
 		return $result;
 	}
+
+
+//ADD BY 陈端生
+        public static function payToUser($param, $timeOut=6){
+                $url = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
+
+        //检测必填参数
+        if(empty($param['partner_trade_no'])) {
+            exit("退款申请接口中，缺少必填参数partner_trade_no！"."<br>");
+        }elseif(empty($param['openid'])){
+            exit("退款申请接口中，缺少必填参数openid！"."<br>");
+        }elseif(empty($param['check_name'])){             //NO_CHECK：不校验真实姓名 FORCE_CHECK：强校验真实姓名（未实名认证的用户会校验失败，无法转账）OPTION_CHECK：针对已实名认证的用户才校验真实姓名（未实名认证用户不校验，可以转账成功）
+            exit("退款申请接口中，缺少必填参数check_name！"."<br>");
+        }elseif(($param['check_name'] == 'FORCE_CHECK' or $param['check_name'] == 'OPTION_CHECK') && (!$param['re_user_name'])){  //收款用户真实姓名。
+            exit("退款申请接口中，缺少必填参数re_user_name！"."<br>");
+        }elseif(empty($param['amount'])){
+            exit("退款申请接口中，缺少必填参数amount！"."<br>");
+        }elseif(empty($param['desc'])){
+            exit("退款申请接口中，缺少必填参数desc！"."<br>");
+        }
+
+
+
+                //异步通知url未设置，则使用配置文件中的url
+                if(!empty($param['notify_url'])){
+                       // $inputObj->SetNotify_url(WxPayConfig::NOTIFY_URL);//异步通知url
+                }
+
+                $param['mch_appid']=WxPayConfig::APPID;//公众账号ID
+                $param['mchid']=WxPayConfig::MCHID;//商户号
+                
+                
+		//$inputObj->SetSpbill_create_ip($_SERVER['REMOTE_ADDR']);//终端ip          
+                //$inputObj->SetSpbill_create_ip("1.1.1.1");       
+		$param['nonce_str']=self::getNonceStr();//随机字符串
+		$param['spbill_create_ip'] = $_SERVER['REMOTE_ADDR'] == '::1' ? '192.127.1.1' : $_SERVER['REMOTE_ADDR'];//获取IP
+		
+                //签名
+                $param['sign']=self::MakeSign($param);
+                $xml = self::ToXml($param);
+
+                $startTimeStamp = self::getMillisecond();//请求开始时间
+
+        //private static function postXmlCurl($xml, $url, $useCert = false, $second = 30)
+        $response = self::postXmlCurl($xml, $url, true, $timeOut);
+print_r($xml);print_r($response);exit;
+                $result = WxPayResults::Init($response);
+        //      self::reportCostTime($url, $startTimeStamp, $result);//上报请求花费时间
+        return $result;
+
+
+        }
+
+/*
+        public function MakeSign($param)
+        {
+//print_r($param);exit;
+                //签名步骤一：按字典序排序参数
+                ksort($param);
+                $string = self::ToUrlParams($param);
+                //签名步骤二：在string后加入KEY
+//print_r($string);exit;         
+
+      $string = $string . "&key=yJAwHgu1wzaDLcz1iS3pg0hZBLTldKoS";
+//print_r($string);echo '------';//exit;   
+                //签名步骤三：MD5加密
+                $string = md5($string);
+//print_r($string);echo '-------';  
+             //签名步骤四：所有字符转为大写
+                $result = strtoupper($string);
+//print_r($result);exit;
+                return $result;
+        }
+*/
+
+
+
+        /** ADD BY CHENDUANSHENG 20180106
+         * 输出xml字符
+         * @throws WxPayException
+        **/
+        public function ToXml($param)
+        {
+
+        $xml = "<xml>";
+        foreach ($param as $key=>$val)
+        {
+                if (is_numeric($val)){
+                        $xml.="<".$key.">".$val."</".$key.">";
+                }else{
+                        $xml.="<".$key."><![CDATA[".$val."]]></".$key.">";
+                }
+        }
+        $xml.="</xml>";
+        return $xml;
+        }
+        /**ADD BY CDS
+         * 生成签名
+         * @return 签名，本函数不覆盖sign成员变量，如要设置签名需要调用SetSign方法赋值
+         */
+        public function MakeSign($param)
+        {
+//print_r($param);exit;
+                //签名步骤一：按字典序排序参数
+                ksort($param);
+                $string = self::ToUrlParams($param);
+                //签名步骤二：在string后加入KEY
+//print_r($string);exit;         
+
+      $string = $string . "&key=".WxPayConfig::KEY;
+//print_r($string);echo '------';//exit;   
+                //签名步骤三：MD5加密
+                $string = md5($string);
+//print_r($string);echo '-------';  
+             //签名步骤四：所有字符转为大写
+                $result = strtoupper($string);
+//print_r($result);exit;
+                return $result;
+        }
+        /**ADD BY CDS
+         * 格式化参数格式化成url参数
+         */
+        public function ToUrlParams($param)
+        {
+                $buff = "";
+                foreach ($param as $k => $v)
+                {
+                        if($k != "sign" && $v != "" && !is_array($v)){
+                                $buff .= $k . "=" . $v . "&";
+                        }
+                }
+
+                $buff = trim($buff, "&");
+                return $buff;
+        }
+
 	
 	/**
 	 * 
@@ -545,9 +681,9 @@ class WxPayApi
 			//设置证书
 			//使用证书：cert 与 key 分别属于两个.pem文件
 			curl_setopt($ch,CURLOPT_SSLCERTTYPE,'PEM');
-			curl_setopt($ch,CURLOPT_SSLCERT, WxPayConfig::SSLCERT_PATH);
+			curl_setopt($ch,CURLOPT_SSLCERT, $GLOBALS['CURRENT_KEY']['TENCENT']['WX_XCX']['cert_cert_file']);
 			curl_setopt($ch,CURLOPT_SSLKEYTYPE,'PEM');
-			curl_setopt($ch,CURLOPT_SSLKEY, WxPayConfig::SSLKEY_PATH);
+			curl_setopt($ch,CURLOPT_SSLKEY, $GLOBALS['CURRENT_KEY']['TENCENT']['WX_XCX']['cert_key_file']);
 		}
 		//post提交方式
 		curl_setopt($ch, CURLOPT_POST, TRUE);
