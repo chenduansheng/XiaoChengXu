@@ -2,19 +2,22 @@
 const app = getApp();
 const common = require("../../js/common.js");
 var that = '';
-var curPage = 1;
 var totalPage = 1;
+var totalNum = 0;     // 总海报数
+var pageNum = 0;      // 单面海报数
+var selectBegin = 0;
+var selectNum = 8;   // 查的条数
+var scroll = true;   // 是否可以滚动加载
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    userInfo:'',
-    selectBegin:0,
-    selectEnd: 50,
+    userInfo:'',    
     arrPoster:[],
-    imgDir:''
+    imgDir:'',
+    winW:300
   },
 
   /**
@@ -22,8 +25,12 @@ Page({
    */
   onLoad: function (options) {
     that = this;
+    const phoneInfo = app.globalData.phoneInfo;
+    console.log(phoneInfo);
+
     that.setData({
-      imgDir: app.globalData.imgDir
+      imgDir: app.globalData.imgDir,
+      winW: phoneInfo.windowWidth
     })
     if (app.globalData.userInfo) {
       that.setData({
@@ -37,14 +44,15 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-  
+    wx.showLoading({
+      title: '加载中...',
+    })
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-    curPage = 1;
+  onShow: function () {   
     that.getPosterList();
   },
 
@@ -65,12 +73,10 @@ Page({
   
   },
   getPosterList:function(){
-    let begin = that.data.selectBegin;
-    let end = that.data.selectEnd;
     let params = {
       _C: 'Act',
       _A: 'select',
-      _LIMIT: begin + "," + end,
+      _LIMIT: selectBegin + "," + selectNum,
       _FILTER: ''
     }
     common.request("getPosterList", that, "form", params);  
@@ -83,9 +89,9 @@ Page({
         let data = ret.data;
         switch (methodName) {
           case 'getPosterList':
-            //let length = data.list.length;
+            totalNum = data.total;   //  总条数
             var arrPoster = [];
-            if (curPage == 1){
+            if (selectBegin == 0){    // 代表第1页
               arrPoster = arrPoster.concat(data.list)
             }else{
               arrPoster = that.data.arrPoster.concat(data.list);
@@ -93,7 +99,13 @@ Page({
             that.setData({
               arrPoster: arrPoster
             })
-            //console.log(arrPoster);
+            if (data.num < selectNum){ // 最后一页
+              scroll = false;
+            }else{
+              scroll = true;
+              selectBegin += selectNum;
+            }            
+            wx.hideLoading()
             break;
         }
 
@@ -106,13 +118,20 @@ Page({
     }
   },
   onFail: function (methodName) {
+    wx.hideLoading();
     console.log("接口调用失败：" + methodName);
   },
   onComplete: function (methodName) { 
 
   },
   scrollToBottom:function(){
-    console.log("---end---");
+    console.log("------底线------");
+    if (scroll){
+      wx.showLoading({
+        title: '加载中...',
+      })
+      that.getPosterList();
+    }
   },
   urlTarget:function(e){
     let curId = e.currentTarget.dataset.id;

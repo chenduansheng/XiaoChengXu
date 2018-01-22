@@ -83,7 +83,8 @@ Page({
     } else {
       that.getUserSetting();
     }
-
+    
+    that.openScopeMap();
   },
   onShow:function(){
     let privateInfo = wx.getStorageSync("pivateInfo");
@@ -91,12 +92,23 @@ Page({
     console.log(wx.getStorageSync("pivateInfo"));
     if (privateInfo.openId) {
       console.log("有openId，即将获取会员信息");
-      // setTimeout(function(){
-        that.getMemberInfo();
-      // },300)
+      that.getMemberInfo();
     }else{
-      console.log("无openId，即将查看用户授权");
-      that.getUserSetting();
+      console.log("无openId，判断有没有code");      
+      let code = wx.getStorageSync("code");
+      if (code){        
+        let params = {
+          _C: "Key",
+          _A: "getWxId",
+          code: code
+        }
+        common.request("getSessionKey", that, "form", params);
+      } else {// 没有code,即将查看用户授权
+        that.getUserSetting();
+      }      
+    }
+    if(!app.globalData.userInfo){
+      that.openScopeUserInfo();
     }
   },
   getUserInfo: function(e) {      // 获取用户微信信息
@@ -320,6 +332,7 @@ Page({
             }else{
               that.setData({
                 hasMember: true,
+                hasUserInfo:true,
                 memberInfo: info
               })
             }             
@@ -334,6 +347,7 @@ Page({
             common.showSuccessTip("提交成功");
             break;
           case 'getSessionKey':
+              console.log("openId成功获取---------");
               let params = {
                 sessionKey : info.session_key,
                 openId : info.openid,
@@ -357,6 +371,20 @@ Page({
   },
   onFail: function (methodName) {
     console.log("接口调用失败：" + methodName);
+    if (methodName == "getSessionKey"){
+      let code = wx.getStorageSync("code");
+      if (code) {
+        let params = {
+          _C: "Key",
+          _A: "getWxId",
+          code: code
+        }
+        common.request("getSessionKey", that, "form", params);
+      } else {// 没有code,即将查看用户授权
+        that.getUserSetting();
+      }  
+
+    }
   },
   onComplete: function (methodName) { 
 
@@ -521,21 +549,40 @@ Page({
       }
     })
   },
-  onUpload: function (result, res, submitName) {
-    let data = JSON.parse(res.data); 
-    if (result == "fail" || res.statusCode!=200 || data.code!=200) {
-      common.showErrorTip(submitName + "上传失败");
-      return false;
+  uploadLogoImg:function(){
+    let logo = that.data.logo;
+    let params = {
+      path: "logo"
     }
-    // 上传成功
-    let info = data.data.info;
-    let pic = app.globalData.imgDir + info.pic;
-    console.log(submitName+"服务器图片地址："+pic);
-    switch (submitName) {
-      case 'submitLogo':
-        
-        break;
+    common.uploadFile(that, "submitLogo", logo, params);
+  },
+  onUpload: function (result, res, submitName) {    
+    if (result == "fail" || res.statusCode == 400){
+      console.log("submitName:" + submitName);
+      console.log(res);
+      if (submitName == "submitLogo"){
+        setTimeout(function(){
+          that.uploadLogoImg();
+        },300)
+      }
+
+    }else{
+      let data = JSON.parse(res.data);
+      if (res.statusCode != 200 || data.code != 200) {
+        common.showErrorTip(submitName + "上传失败");
+        return false;
+      }
+      // 上传成功
+      let info = data.data.info;
+      let pic = app.globalData.imgDir + info.pic;
+      console.log(submitName + "服务器图片地址：" + pic);
+      switch (submitName) {
+        case 'submitLogo':
+
+          break;
+      }
     }
+    
   }
   
 })

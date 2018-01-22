@@ -9,6 +9,7 @@
    height: 3rpx;
    width: 30%;
    left: 35%;
+   bottom: 4rpx;
    background: #FF0036;
    position: relative;
 } 

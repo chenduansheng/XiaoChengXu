@@ -15,12 +15,10 @@
   <view class="f">
     <image class="w120 mt50" bindtap="addImg" src="../../image/camera_big2.png" mode="widthFix"></image>
   </view>
-  <!-- <view class="cyellow f14 pb100" bindtap="urlTarget" data-url="generatePuzzles">
-    <icon class='iconfont icon-eit f16'></icon> 联系客服
-  </view> -->
-  <view class="tc mt10 f14 c7 pb100">请勿上传色情以及其他违禁图片</view>
-  <view class="cyellow f14 pb100 dn">
-    <contact-button type="default-light" size="20" session-from="weapp">联系客服</contact-button>
+  <view class="tc mt10 f14 c7 pb50 dn">请勿上传色情以及其他违禁图片</view>
+  <view class="contact pb50">
+    <text class="iconfont icon-message f18 dib vtt c7"></text>
+    <button class="f14 c7 dib h20 lh20 p0" open-type="contact" session-from='puzzles' style="border-color:#fff;">联系客服</button>
   </view>
   
 </view>
@@ -96,10 +94,10 @@
             <input class='ell' type='text' bindinput="getAddress"></input>
           </view>
         </view>
-        <view class="F_ bgf r2 mt10 h40 lh40 bbox p0-10 ell r4">
+        <view class="F_ bgf r2 mt10 h40 lh40 bbox p0-10 ell r4" bindtap="chooseMap">
           <label class="tr w60">我的位置</label>
           <view class='f pl5'>
-             <input class='ell' type='button' disabled='true' bindtap="chooseMap" placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
+             <input class='ell' type='button' disabled='true' placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
           </view>
           <view class="pl5"><icon class="iconfont icon-coordinates f20"></icon></view>
         </view>

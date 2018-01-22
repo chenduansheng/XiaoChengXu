@@ -55,10 +55,10 @@
             <input class='ell' type='text' bindinput="getAddress" value="{{}}"></input>
           </view>
         </view>
-        <view class="F_ bgf r2 mt10 h40 lh40 bbox p0-10 ell r4">
+        <view class="F_ bgf r2 mt10 h40 lh40 bbox p0-10 ell r4" bindtap="chooseMap">
           <label class="tr w60 c9">我的位置</label>
           <view class='f pl5'>
-             <input class='ell' type='button' disabled='true' bindtap="chooseMap" placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
+             <input class='ell' type='button' disabled='true' placeholder='选择公司或店铺位置' value="{{mapInfo?mapInfo.address:''}}"></input> 
           </view>
           <view class="pl5"><icon class="iconfont icon-coordinates f20"></icon></view>
         </view>

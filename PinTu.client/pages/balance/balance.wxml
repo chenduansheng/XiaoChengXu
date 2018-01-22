@@ -1,6 +1,9 @@
 <!--pages/balance/balance.wxml-->
 <view class="H W bge f14 F bbox">
-  <view class="p10 tr cblue">联系客服</view>
+  <view class="contact p10 tr">
+    <button class="f14 cblue dib h20 lh20 p0" open-type="contact" session-from='puzzles' style="border-color:#fff;">联系客服</button>
+  </view>
+  
   <view class="bgf r4 p10 m0-10">
     <view class="F_">
       <view class="">帐户余额</view>
@@ -20,5 +23,5 @@
     </view>
     <view class="c9 tc h50 lh60 f12">1-5个工作日到帐</view>
   </view>
-  <view class="W tc cblue f12 pa B0 h30">常见问题</view>
+  <view class="W tc cblue f12 pa B0 h30 dn">常见问题</view>
 </view>

@@ -6,7 +6,10 @@ Page({
   data: {
     userInfo:'',
     balance:0,
-    posterNum:134
+    moneyTotal: 0,  // 参与拼图所获总金额
+    numTotal: '',    // 参与拼图个数
+    selectBegin: 0,
+    selectEnd: 2,
   },
   onLoad: function (options) {
     that = this;
@@ -31,6 +34,7 @@ Page({
       _A:'selectOne'
     }
     common.request("getBalance", that, "form", params);
+    that.getPlayList();
   },
 
   /**
@@ -77,6 +81,12 @@ Page({
             }
             that.setData({ balance: curBalance})
             break;
+          case 'getPlayList':
+            that.setData({
+              moneyTotal: data.money_total,
+              numTotal: data.total
+            })
+            break;   
         }
 
       } else {
@@ -90,5 +100,15 @@ Page({
   onFail: function (methodName) {
     console.log("接口调用失败：" + methodName);
   },
-  onComplete: function (methodName) { }
+  onComplete: function (methodName) { 
+
+  },
+  getPlayList: function () {     // 参与的
+    let params = {
+      _C: "My",
+      _A: "selectIn",
+      _LIMIT: that.data.selectBegin + "," + that.data.selectEnd
+    }
+    common.request("getPlayList", that, "form", params);
+  }
 })

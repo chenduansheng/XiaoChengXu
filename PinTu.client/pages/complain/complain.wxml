@@ -17,7 +17,7 @@
   <view class="F_ bgf h40 lh40 p0-10 bbox">
     <label class="pr10">手机号</label>
     <view class="f">
-      <input class="W" placeholder="选填" type='number'></input>
+      <input class="W" placeholder="选填" bindinput='getTel' type='number'></input>
     </view>
   </view>
   <view class="F_ bbox p20-0">

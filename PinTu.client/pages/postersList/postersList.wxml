@@ -4,11 +4,12 @@
   <scroll-view class="f scroll" scroll-y="true" bindscrolltolower="scrollToBottom">
     <block wx:if="{{arrPoster.length>0}}">
       <block wx:for="{{arrPoster}}">
-        <view class="W5 bbox pl10 pt10 pr10 pb5 {{index>1?'mt15':''}}" bindtap="urlTarget" data-url="beginPuzzles" data-id="{{item.id}}">
-          <image class="W" mode="widthFix" src="{{imgDir+item.pic}}"></image> 
+        <!-- <view class="W5 bbox pl10 pt10 pr10 pb5 {{index>1?'mt15':''}}" bindtap="urlTarget" data-url="beginPuzzles" data-id="{{item.id}}"> -->
+        <view class="W5 bbox pl5 pt10 pr5 pb5 {{index>1?'mt15':''}}" bindtap="urlTarget" data-url="beginPuzzles" data-id="{{item.id}}">
+          <image class="" mode="" src="{{imgDir+item.pic}}" style="width:{{winW/2-10}}px;height:{{winW/2-10}}px"></image> 
           <view class="tc h25 lh25 ell F_ jcc c3 f12">
-            <image class="w25 h25 r mr10" src="{{userInfo.avatarUrl}}"></image>
-            {{userInfo.nickName}}
+            <image class="w25 h25 r mr10" src="{{item.user_info.avatarUrl}}"></image>
+            {{item.user_info.nick_name}}
           </view>
         </view>
       </block>

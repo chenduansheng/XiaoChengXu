@@ -33,12 +33,12 @@ Page({
     })
     wx.showShareMenu({
       withShareTicket: true
-    })  
+    })    
   },
   onReady: function () {
   
   },
-  onShow: function () {
+  onShow: function () {    
     that.setData({
       avatar: app.globalData.userInfo ? app.globalData.userInfo.avatarUrl : '../../image/2018.png' 
     });

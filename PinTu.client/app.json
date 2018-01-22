@@ -11,7 +11,8 @@
     "pages/complain/complain",
     "pages/myPuzzles/myPuzzles",
     "pages/balance/balance",
-    "pages/myInfo/myInfo"
+    "pages/myInfo/myInfo",
+    "pages/test/test"
   ],
   "window":{
     "backgroundTextStyle":"light",
@@ -33,7 +34,7 @@
     },
     {
       "pagePath": "pages/postersList/postersList",
-      "text": "可拼海报",
+      "text": "海报拼图",
       "iconPath": "image/porsters.png",
       "selectedIconPath": "image/porsters2.png"
     },

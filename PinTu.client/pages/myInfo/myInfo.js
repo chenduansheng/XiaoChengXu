@@ -31,17 +31,20 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    that.setData({
-      userInfo: app.globalData.userInfo
+    wx.showLoading({
+      title: '加载中...',
     })
-    that.getMemberInfo();
+    that.getMemberInfo();  
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-  
+    that.setData({
+      userInfo: app.globalData.userInfo
+    })   
+    
   },
 
   /**
@@ -129,6 +132,10 @@ Page({
     let inputCoordinate = that.data.inputCoordinate;
     let inputDiffDistance = that.data.inputDiffDistance;
     let inputDeclaration = that.data.inputDeclaration;
+    var logo = that.data.logo;
+    if (logo.includes(app.globalData.imgDir)){
+      logo = logo.replace(app.globalData.imgDir,"");
+    }
     flag = common.verifyNull(inputWx, "微信号");
     flag && (flag = common.verifyNull(inputName, "联系人"));
     flag && (flag = common.verifyTel(inputTel));
@@ -151,10 +158,12 @@ Page({
           //distance: inputDiffDistance,
           gender: that.data.userInfo.gender,
           city: that.data.userInfo.city,
-          logo: that.data.logo
+          logo: logo
         })
       }
-      //common.showErrorTip("提交会员信息");
+      wx.showLoading({
+        title: '加载中...',
+      })
       common.request("submitMemberInfo", that, "form", params);
     }
   },
@@ -173,7 +182,9 @@ Page({
               })
             } else {
               let mapInfo = {
-                "address": info.address
+                "address": info.address,
+                "latitude":info.lat,
+                "longitude":info.lng
               }
               that.setData({
                 hasMember: true,
@@ -185,6 +196,7 @@ Page({
                 logo: app.globalData.imgDir + info.logo
               })
             }
+            wx.hideLoading();
             break;
           case 'submitMemberInfo':  // 提交会员信息
             that.setData({
@@ -193,10 +205,10 @@ Page({
               showCanvas: false,
               showMemberInfo: false
             })
+            wx.hideLoading();
             common.showSuccessTip("保存成功");
             setTimeout(function(){
-              common.urlTarget("","switchTab");
-
+              common.urlTarget("my","switchTab");
             },1500)
             break;
 
@@ -211,9 +223,53 @@ Page({
     }
   },
   onFail: function (methodName) {
+    wx.hideLoading();
     console.log("接口调用失败：" + methodName);
   },
   onComplete: function (methodName) {
+
+  },
+  uploadLogo: function () {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album'],
+      success: function (res) {
+        let tempFilePaths = res.tempFilePaths;
+        that.setData({ logo: tempFilePaths[0] });
+        let params = {
+          path: "logo"
+        }
+        common.uploadFile(that, "submitLogo", tempFilePaths[0], params);
+      }
+    })
+  },
+  onUpload: function (result, res, submitName) {
+    if (result == "fail" || res.statusCode == 400) {
+      console.log("submitName:" + submitName);
+      console.log(res);
+      if (submitName == "submitLogo") {
+        setTimeout(function () {
+          that.uploadLogoImg();
+        }, 300)
+      }
+
+    } else {
+      let data = JSON.parse(res.data);
+      if (res.statusCode != 200 || data.code != 200) {
+        common.showErrorTip(submitName + "上传失败");
+        return false;
+      }
+      // 上传成功
+      let info = data.data.info;
+      let pic = app.globalData.imgDir + info.pic;
+      console.log(submitName + "服务器图片地址：" + pic);
+      switch (submitName) {
+        case 'submitLogo':
+          that.setData({ logo: pic});
+          break;
+      }
+    }
 
   }
 })

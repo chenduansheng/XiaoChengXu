@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -9,14 +9,18 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "1.7.2",
-	"appid": "wx3d00770652053edd",
-	"projectname": "PinTu_v0.0.1",
+	"appid": "wxd727ee9e47b2faa6",
+	"projectname": "%E6%8B%BC%E5%9B%BEnew",
 	"condition": {
 		"search": {
 			"current": -1,
 			"list": []
 		},
 		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
 			"current": -1,
 			"list": []
 		},
@@ -88,6 +92,18 @@
 					"id": -1,
 					"name": "我的信息",
 					"pathName": "pages/myInfo/myInfo",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "test",
+					"pathName": "pages/test/test",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "test",
+					"pathName": "pages/test/test",
 					"query": ""
 				}
 			]

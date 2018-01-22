@@ -1,12 +1,12 @@
 <!--pages/my/my.wxml-->
 <view class="container">
-  <view class="bge cf F_">
+  <view class="bggolden cf F_">
     <view class="p10">
       <image class="w64 h64 r" src="{{userInfo.avatarUrl}}" mode="widthFix"></image>
     </view>
-    <view class="f F bbox c3">
+    <view class="f F bbox">
       <view class="h30 f16">{{userInfo.nickName}}</view>
-      <view class="h30 f14">共参与了{{posterNum}}个拼图</view>
+      <view class="h30 f14">共参与了{{numTotal}}个拼图</view>
     </view>
   </view>
   <scroll-view class="f bge f14 c3">
@@ -25,14 +25,14 @@
       </view>      
     </view>
 
-    <view class="bgf p0-10 mt10 mb10" bindtap="urlTarget" data-url="balance">
+    <!-- <view class="bgf p0-10 mt10 mb10" bindtap="urlTarget" data-url="balance">
       <view class="bbe p10-0 F_">
         <icon class="iconfont icon-redpacket f24"></icon>
         <text class="f ell pl5">余额提现</text>
         <text>￥{{balance}}</text>
         <icon class="iconfont icon-enter pl10 c7 lh30 f18"></icon>
       </view>      
-    </view>
+    </view> -->
 
     <view class="bgf p0-10" bindtap="urlTarget" data-url="myInfo">
       <view class="bbe p10-0 F_">
@@ -43,12 +43,11 @@
     </view>
     <view class="bgf p0-10">
       <view class="bbe p10-0 F_">
-        <icon class="iconfont icon-emoji f24"></icon>
-        <view class="f ell pl5"><button class="f14" open-type="contact" session-from='puzzles' style="border-color:#fff;">客服</button></view>
+        <icon class="iconfont icon-message f24"></icon>
+        <view class="contact f ell pl5"><button class="f14 tl pl0" open-type="contact" session-from='puzzles' style="border-color:#fff;">客服</button></view>
         <icon class="iconfont icon-enter pl10 c7 lh30 f18"></icon>
       </view> 
     </view>
-    <!-- <contact-button class="f" session-from="puzzles">客服</contact-button> -->
     <view class=""></view>
 
   </scroll-view>

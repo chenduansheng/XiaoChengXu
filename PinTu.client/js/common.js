@@ -24,16 +24,14 @@ function request(methodName, page, dataType, params) {
     _DATA.openid = openId;
     _DATA = JSON.stringify(_DATA);
     params._DATA = _DATA;
-  }    
-  if (methodName == "getMemberInfo"){
-    console.log("getMemberInfo-params:");
-    console.log(params);
-  }
+  } 
+  var data = getRequestData(dataType, params);
+  var url = getRequestUrl(methodName);
   return wx.request({
-    url: getRequestUrl(methodName),
+    url: url,
     method: 'POST',
     dataType: 'json',
-    data: getRequestData(dataType, params),
+    data: data,
     header: {
       'content-type': getContentType(dataType)
     },
@@ -42,8 +40,10 @@ function request(methodName, page, dataType, params) {
         page.onSuccess(methodName,res);
     },
     fail: function (res) {
-      console.log(methodName);
-      console.log(res);
+      console.log('methodName:',methodName);
+      console.log('url:',url);
+      console.log('data:',data);
+      console.log('res:',res);
       if (page)
         page.onFail(methodName);
     },
@@ -70,6 +70,26 @@ function getRequestData(dataType, params) {
   }
 }
 
+// 发送模版
+function sendTpl(accessToken,params,page,tplName){
+  let privateInfo = wx.getStorageSync("pivateInfo");
+  let openId = privateInfo.openId ? privateInfo.openId : '';
+  params.touser = openId;
+  wx.request({
+    url: "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=" + accessToken,
+    dataType: "json",
+    method: "post",
+    data: params,
+    success: function (res) {
+      console.log(res);
+      return page.onTplSuccess(res,tplName);
+    }, fail(res) {
+      console.log(res);
+      return page.onTplFail(res,tplName);
+    }
+  })
+}
+
 // 上传图片
 function uploadFile(page,submitName,imgSrc,params){
   if (!page){showErrorTip("未指定上传页面")};
@@ -91,6 +111,7 @@ function uploadFile(page,submitName,imgSrc,params){
       page.onUpload("success", res, submitName);
     },
     fail: function (res) {
+      console.log(submitName);
       console.log(res);
       page.onUpload("fail", res, submitName);
     }
@@ -268,5 +289,6 @@ module.exports = {
   baseUrl: baseUrl,
   wxpay: wxpay,
   phoneInfo: phoneInfo,
-  uploadFile: uploadFile
+  uploadFile: uploadFile,
+  sendTpl: sendTpl
 }
