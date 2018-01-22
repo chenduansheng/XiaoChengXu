@@ -12,6 +12,10 @@
          <view class="bg0 pt10 pb10 pl4 pr4 r5 f12 ls2 cyellow0 byellow0 pa bbox w80 tc L10 T20">
           <view class="">点击拼图</view>
           <view class="">赢取赏金</view>
+          <view class="dn">
+            <icon class="iconfont icon-time f16 vb ell"></icon>
+        {{useTime}}秒
+          </view>
         </view>           
       </view>      
     </view>
@@ -25,35 +29,35 @@
         <icon class="iconfont icon-tools f20 mr5 vb"></icon>
         <view class='dib'>再发一个</view>       
       </view>
-      <view class="f">
+      <button class="f bbox" open-type="share" plain="true" style="border:none;color:#fff;font-size:32rpx;line-height:45px">
         <icon class="iconfont icon-share f20 mr5 vb"></icon>去转发
-      </view>
+      </button>
     </view>
   </view>
   <view class="W">
     <view class="F_ f14 lh40 bbe">
       <view class="f pl10">目前排名</view>
-      <view class="pr10">还有机会赢得第一名X元赏金</view>
+      <view class="pr10">还有机会赢得第一名{{ainfo.award_first}}元赏金</view>
     </view>    
   </view>
   <view class='f H oh F W bbox'>
       <scroll-view class='scroll'>
-        <block wx:for="0000000">
+        <block wx:for="{{arrRank.list}}" wx:for-item="item">
           <view class="F_ bbe p10-0 bbox">
             <view class="p0-10 pr">
-              <image class="w40 h40 r2" src="../../image/poster2018.png"></image>
+              <image class="w40 h40 r2" src="{{item.user_info.avatarUrl}}"></image>
               <view class="pa L5 T-5 bbox be2 z1 r cf tc w20 h20 f12 {{index==0?'bgyellow':'dn'}}">1</view>
               <view class="pa L5 T-5 bbox be2 z1 r cf tc w20 h20 f12 {{index==1?'bgc':'dn'}}">2</view>
               <view class="pa L5 T-5 bbox be2 z1 r cf tc w20 h20 f12 {{index==2?'bgorange':'dn'}}">3</view>
             </view>
             <view class="f pr10 f14 c7">
               <view class="F_ h20 lh20 b">
-                <view class="f">昵称</view>
-                <view class="">3.00元</view>
+                <view class="f">{{item.user_info.nick_name}}</view>
+                <view class="">0.0元（活动未结束）</view>
               </view>
               <view class="F_ h20 f12">
-                <view class="f">用时34秒</view>
-                <view class="">12月15日 17:01</view>
+                <view class="f">用时{{item.use_time}}秒</view>
+                <view class="">{{item.create_time}}</view>
               </view>
             </view>
             
@@ -70,9 +74,55 @@
       </view>
     </view>
 
-    <view class="f F pt50">
-      <view class=""></view>
-      <view class='tc f12 cc mt20'>点击图块交换位置，拼图成功自动领取赏金</view>
+    <image class="C4 w90 h90 dib m0 bbox {{preIndex === index ? 'bgolden' : 'bc'}}" src="../../image/2018.png" data-src="{{arrPic[0]}}"></image>
+
+    <view class="f F_ jcc">
+      <view class="w270 h270 bbox pr">      
+        <block wx:for="{{arrPic}}">
+          <image class="C4 h90 dib m0 bbox {{preIndex === index ? 'bgolden' : 'bc'}}" src="{{arrPic[index]}}" data-index="{{index}}" data-src="{{arrPic[index]}}" mode="scaleToFill" bindtap="exchangePic"></image>
+        </block>
+      </view>  
+    </view>
+
+    <!-- 原始交换 -->
+    <view class="f F_ jcc dn">
+      <view class="w270 h270 bb bbox">
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{posterSrc}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{test1}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+
+        <view class='f F_ h90 bbb bbox'>
+          <view class='f H bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>
+          <view class='f H blb brb bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>   
+          <view class='f H bbox'>
+            <image class='W H' src="{{test2}}" mode="scaleToFill" bindtap="exchangePic"></image>
+          </view>        
+        </view>
+      </view>
     </view>
 
     <view class="F_ jcc f16 p20-0">
@@ -82,4 +132,9 @@
       </view>
     </view>
   </view>
+
 </view>
+
+<view class="">
+  <canvas class="w270 h270 bggreen z1" canvas-id="myCanvas" style="display: block!important;"></canvas>
+</view>  

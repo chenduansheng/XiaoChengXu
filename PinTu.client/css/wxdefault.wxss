@@ -32,22 +32,23 @@ select::-ms-expand { display: none; }
 .t{display:table-cell;vertical-align:middle}
 .tt{display:table-cell;vertical-align:top}
 
-/*阴影*/
 .bs0{-moz-box-shadow: 0px 0px 5px #ddd; box-shadow: 0px 0px 5px #ddd;}
 .bsi0{-moz-box-shadow: 0px 0px 5px #009688 inset; box-shadow: 0px 0px 5px #009688 inset;}
 .bsif{-moz-box-shadow: 0px 0px 5px #fff inset; box-shadow: 0px 0px 5px #fff inset;}
 
-/* box--flexbox--flex */
 .flex,.F,.F_{display:-webkit-box; display:-moz-box; display:-webkit-flex; display:-moz-flex; display:-ms-flexbox; display:flex}
 .F{height:100%; -moz-box-orient:vertical; -webkit-box-orient:vertical; box-orient:vertical; flex-direction:column }
 .F_{width:100%;flex-direction:row;justify-content:space-between;align-items:center;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap}
 .f{-webkit-box-flex:1; -webkit-flex:1; flex:1;}
 .fis,.ft{align-items: flex-start}
+.fie{align-items: flex-end}
 .fss,.fst{align-self: flex-start}
 .fse,.fsb{align-self: flex-end}
 .fsc{align-self: center}
 .jce,.jcfe{justify-content: flex-end}
 .jcc{justify-content: center}
+.jcs{justify-content: flex-start}
+.jce{justify-content: flex-end}
 
 /* display */
 .db{display:block}
@@ -90,6 +91,10 @@ select::-ms-expand { display: none; }
 .tc{text-align:center}
 
 .vb{vertical-align: bottom}
+.vt{vertical-align: top}
+.vtb{vertical-align: text-bottom}
+.vtt{vertical-align: text-top}
+.vm{vertical-align: middle}
 
 /* cursor */
 .S{cursor:pointer;}
@@ -133,31 +138,35 @@ select::-ms-expand { display: none; }
 
 /* 本项目：透明背景色 */
 .bgopacity{background: rgba(0, 0, 0, 0.4)}
-.bgopacity8{background: rgba(0, 0, 0, 0.8)}
+.bgopacity9{background: rgba(0, 0, 0, 0.9)}
 .bgopacity2{background: rgba(255, 255, 255, 0.8)}
 .bgopacity3{background: rgba(255, 255, 255, 0.3)}
 
 /* 本项目:主要用色 */
-.cmain{color: #cb634a}
+.cmain{color: #FF0036}
 .cdefault{color: #5ad659}
 .cgrey,.clrgrey{color: #909090}
 .cred{color: #cc0000}
-.cblue{color: #2782D7}
-.cyellow{color:#ffcc99}
+.cblue{color: #576b95}
+/* .cyellow{color:#ffcc99} */
+.cyellow{color:#FF0036}
 .cyellow0{color:#ffff00}
 .corange{color:orange}
 .ct{color: transparent}
 .bgdefault{background-color: #5ad659}
-.bgmain{background-color: #cb634a}
+/* .bgmain{background-color: #cb634a} */
+.bgmain{background-color: #fffded}
 .bggrey{background-color: #d8d8d8}
 .bggrey2{background-color: #909090}
 .bggreen{background-color: #5ad659}
 .bgred{background-color: #cc0000}
 .bgblue{background-color: #2782D7}
-.bgyellow{background-color: #ffcc99}
+.bgyellow{background-color: #FF0036}
 .bgorange{background-color: orange}
 .bgpink{background-color: #fff1ea}
 .bgred2{background-color: #cd533e}
+.bggolden{background-color: #FF0036}
+.bgRose{background-color: #ea0132}
 
 /* 本项目:边框 */
 .bgreen{border:1px solid #5ad659}
@@ -167,6 +176,8 @@ select::-ms-expand { display: none; }
 .bgrey{border:1px solid #d8d8d8}
 .bgrey2{border:1px solid #909090}
 .bred{border:1px solid #f9555d}
+.bgolden{border:1px solid #f6d94d}
+.bRose{border:3px solid #ea0132}
 
 /* border      0~9 a~f */   
 .bbblue{border-bottom: 1px solid #2782D7}
@@ -840,8 +851,12 @@ select::-ms-expand { display: none; }
   background-color: #ddd;
 }
 
-.bge {
+/* .bge {
   background-color: #eee;
+} */
+
+.bge {
+  background-color: #f4f4f4;
 }
 
 .bgf {
@@ -3637,6 +3652,10 @@ select::-ms-expand { display: none; }
 
 
 /* radius      2~10    */
+.rb{
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
 .rt5{
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
@@ -5360,8 +5379,14 @@ select::-ms-expand { display: none; }
 .h200 {
   height: 400rpx;
 }
+.h220 {
+  height: 440rpx;
+}
 .h270 {
   height: 540rpx;
+}
+.h300 {
+  height: 600rpx;
 }
 
 /* font        10~40   */

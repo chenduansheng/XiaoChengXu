@@ -14,16 +14,24 @@ function request(methodName, page, dataType, params) {
   let privateInfo = wx.getStorageSync("pivateInfo");
   //console.log("缓存privateInfo:");
   //console.log(privateInfo);
-  //console.log("code_local:" + wx.getStorageSync("code"))
-  params.openid = privateInfo.openId ? privateInfo.openId:'';
   if (!page){
     console.log("没传page！");
   }
+  let openId = privateInfo.openId ? privateInfo.openId : '';
+  params.openid = openId;
+  if (params._DATA){
+    var _DATA = JSON.parse(params._DATA);
+    _DATA.openid = openId;
+    _DATA = JSON.stringify(_DATA);
+    params._DATA = _DATA;
+  } 
+  var data = getRequestData(dataType, params);
+  var url = getRequestUrl(methodName);
   return wx.request({
-    url: getRequestUrl(methodName),
+    url: url,
     method: 'POST',
     dataType: 'json',
-    data: getRequestData(dataType, params),
+    data: data,
     header: {
       'content-type': getContentType(dataType)
     },
@@ -31,9 +39,13 @@ function request(methodName, page, dataType, params) {
       if (page)
         page.onSuccess(methodName,res);
     },
-    fail: function () {
+    fail: function (res) {
+      console.log('methodName:',methodName);
+      console.log('url:',url);
+      console.log('data:',data);
+      console.log('res:',res);
       if (page)
-        page.onFailed(methodName);
+        page.onFail(methodName);
     },
     complete: function () {
       if (page)
@@ -58,20 +70,58 @@ function getRequestData(dataType, params) {
   }
 }
 
+// 发送模版
+function sendTpl(accessToken,params,page,tplName){
+  let privateInfo = wx.getStorageSync("pivateInfo");
+  let openId = privateInfo.openId ? privateInfo.openId : '';
+  params.touser = openId;
+  wx.request({
+    url: "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=" + accessToken,
+    dataType: "json",
+    method: "post",
+    data: params,
+    success: function (res) {
+      console.log(res);
+      return page.onTplSuccess(res,tplName);
+    }, fail(res) {
+      console.log(res);
+      return page.onTplFail(res,tplName);
+    }
+  })
+}
+
+// 上传图片
+function uploadFile(page,submitName,imgSrc,params){
+  if (!page){showErrorTip("未指定上传页面")};
+  let src = imgSrc ? imgSrc : '';
+  let privateInfo = wx.getStorageSync("pivateInfo");
+  params.openid = privateInfo.openId;  
+  params._C = "Pic",
+  params._A = "upload",
+  console.log("上传图片的参数：");
+  console.log(baseUrl + "/index.php");
+  console.log(imgSrc);
+  console.log(params);
+  wx.uploadFile({
+    url: baseUrl + "/index.php",
+    filePath: imgSrc,
+    name: 'file',
+    formData: params,
+    success: function (res) {
+      page.onUpload("success", res, submitName);
+    },
+    fail: function (res) {
+      console.log(submitName);
+      console.log(res);
+      page.onUpload("fail", res, submitName);
+    }
+  })
+}
+
 // 多种跳转,name：目标文件名，urltype：跳转类型，params：?+参数集合
 function urlTarget(name,urltype,params){
   if (!params) params='';
   switch (urltype){
-    case undefined:
-      wx.navigateTo({
-        url: '../' + name + '/' + name + params
-      })
-      break;
-    case '':
-      wx.navigateTo({
-        url: '../' + name + '/' + name + params
-      })
-      break;
     case 'navigate':        // 保留当前页面，跳转到应用内的某个页面
       wx.navigateTo({
         url: '../' + name + '/' + name + params
@@ -91,6 +141,12 @@ function urlTarget(name,urltype,params){
       wx.reLaunch({
         url: '../' + name + '/' + name + params
       })
+      break;
+    default:
+      wx.navigateTo({
+        url: '../' + name + '/' + name + params
+      })
+      break;
   }
 }
 
@@ -107,7 +163,8 @@ function showErrorTip(text) {       // 显示错误提示
   wx.showToast({
     title: text,
     icon:'loading',
-    //image: '../../image/iocn_error.png',
+    image: '../../image/icon_warn.png',
+    // mask:true,
     duration: 1500
   })
 }
@@ -187,22 +244,23 @@ function deleteTeaMoneyCart(carts, token, tableId) {
   computeCarts(carts);
 }
 
-function wxpay(timeStamp, nonceStr, pkg, paySign, orderId) {
+function wxpay(timeStamp, nonceStr, pkg, paySign,page) {
   wx.requestPayment({
-    timeStamp: timeStamp,
+    timeStamp: timeStamp.toString(),
     nonceStr: nonceStr,
     "package": pkg,
     signType: 'MD5',
     paySign: paySign,
     success: function (res) {
-      showSuccessTip("微信支付成功：");
-      console.log(res);      
-      //common.urlTarget('paySuccess', 'redirect', "?paytype=wx&price=" + this.data.carts.totalPrice + "&orderId=" + orderId);
+      showSuccessTip("微信支付成功~");
+      page.onWxPay("success",res);      
+      //console.log(res);
     },
     fail: function (res) {
-      console.log("微信支付失败：");
-      console.log(res);
-      showErrorTip("支付失败!");
+      showErrorTip("微信支付失败");
+      console.log(res);  
+      //page.onWxPay("fail",res);
+      //console.log("微信支付失败：");          
     }
   })
 }
@@ -230,5 +288,7 @@ module.exports = {
   ok: ok,
   baseUrl: baseUrl,
   wxpay: wxpay,
-  phoneInfo: phoneInfo
+  phoneInfo: phoneInfo,
+  uploadFile: uploadFile,
+  sendTpl: sendTpl
 }
