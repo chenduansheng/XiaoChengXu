@@ -331,8 +331,8 @@ Page({
               })
             }else{
               that.setData({
-                hasMember: true,
-                hasUserInfo:true,
+                hasMember: false,
+                hasUserInfo:false,
                 memberInfo: info
               })
             }             
